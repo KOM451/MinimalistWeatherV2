@@ -139,14 +139,14 @@ public class WeatherFragment extends Fragment {
             mWeatherForecastLayout.setVisibility(View.INVISIBLE);
             requestWeatherForecast(currentWeatherId);
         }
-        // 3.空气质量（存在bug，待处理。。。）
+        // 3.空气质量
         String weatherAirQualityStr = preferences.getString("weather_air_quality", null);
         if(weatherAirQualityStr != null) {
             HeWeatherAirQuality weatherAirQuality = JsonParser.parseWeatherAirQuality(weatherAirQualityStr);
             showWeatherAirQualityInformation(weatherAirQuality);
         } else {
-            //String weatherId = getActivity().getIntent().getStringExtra("weather_id");
-            requestWeatherAirQuality();
+            String weatherId = getActivity().getIntent().getStringExtra("weather_id");
+            requestWeatherAirQuality(weatherId);
         }
         // 4.生活指数
         String weatherLifestyleStr = preferences.getString("weather_lifestyle", null);
@@ -165,7 +165,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onRefresh() {
                 requestWeatherNow(currentWeatherId); // 请求实况天气数据
-                requestWeatherAirQuality(); // 请求空气质量数据
+                requestWeatherAirQuality(currentWeatherId); // 请求空气质量数据
                 requestWeatherForecast(currentWeatherId); // 请求天气预报数据
                 requestWeatherLifestyle(currentWeatherId); // 请求生活指数数据
                 // 在最后执行的请求结束时，隐藏刷新进度
@@ -232,7 +232,9 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_lifestyle", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherLifestyleInformation(weatherLifestyle); // 更新生活指数数据
-                            Toast.makeText(getContext(), "刷新成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "生活指数获取成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "获取生活指数失败", Toast.LENGTH_SHORT).show();
                         }
                         refresh.setRefreshing(false);
                     }
@@ -244,8 +246,8 @@ public class WeatherFragment extends Fragment {
     /***
      * 请求实况空气质量数据
      */
-    public void requestWeatherAirQuality() {
-        String url = "https://free-api.heweather.net/s6/air/now?location=auto_ip&key=1f973beb7602432bb31cdceb9da27525";
+    public void requestWeatherAirQuality(String weatherId) {
+        String url = "https://free-api.heweather.net/s6/air/now?location=" + weatherId +"&key=1f973beb7602432bb31cdceb9da27525";
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -269,6 +271,9 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_air_quality", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherAirQualityInformation(weatherAirQuality); // 更新实况空气数据
+                            Toast.makeText(getContext(), "实况空气质量数据获取成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "实况空气质量数据获取失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -307,6 +312,9 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_forecast", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherForecastInformation(weatherForecast); // 更新天气预报信息
+                            Toast.makeText(getContext(), "天气预报数据获取成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "天气预报数据获取失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -344,6 +352,9 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_now", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherNowInformation(weatherNow); // 更新实况天气信息
+                            Toast.makeText(getContext(), "获取实况天气成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "获取实况天气失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

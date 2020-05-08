@@ -311,7 +311,7 @@ public class AreaChooseFragment extends Fragment {
                     fragment.refresh.setRefreshing(false);
                     fragment.currentWeatherId = weatherId;
                     fragment.requestWeatherNow(weatherId);
-                    fragment.requestWeatherAirQuality();
+                    fragment.requestWeatherAirQuality(weatherId);
                     fragment.requestWeatherForecast(weatherId);
                     fragment.requestWeatherLifestyle(weatherId);
                 }
