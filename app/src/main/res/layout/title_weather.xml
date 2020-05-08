@@ -5,12 +5,21 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!--天气信息头布局-->
 
+    <!--定位导航图标-->
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/navigation" />
+
     <!--城市切换按钮-->
     <Button
         android:id="@+id/change_city_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="15dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="@drawable/ic_settings"/>

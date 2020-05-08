@@ -254,6 +254,9 @@ public class WeatherFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mNowAirQlty.setText("NaN");
+                        mNowAirAqi.setText("NaN");
+                        mShowAirQuality.setEnabled(false);
                         Toast.makeText(getContext(), "获取实况空气质量数据失败", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -271,8 +274,12 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_air_quality", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherAirQualityInformation(weatherAirQuality); // 更新实况空气数据
+                            mShowAirQuality.setEnabled(true);
                             Toast.makeText(getContext(), "实况空气质量数据获取成功", Toast.LENGTH_SHORT).show();
                         } else {
+                            mNowAirQlty.setText("NaN");
+                            mNowAirAqi.setText("NaN");
+                            mShowAirQuality.setEnabled(false);
                             Toast.makeText(getContext(), "实况空气质量数据获取失败", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -460,7 +467,7 @@ public class WeatherFragment extends Fragment {
         String nowCond = weatherNow.now.cond_txt; // 获取实况天气状况
 
         String windSc = weatherNow.now.wind_sc + "级"; // 获取风力
-        String windDir = weatherNow.now.wind_dir + "风"; // 获取风向
+        String windDir = weatherNow.now.wind_dir; // 获取风向
         String hum = weatherNow.now.hum + "%"; // 获取空气湿度
         String fl = weatherNow.now.fl + "℃"; // 获取体感温度
         String pref = weatherNow.now.pres + "hPa"; // 获取大气压强
