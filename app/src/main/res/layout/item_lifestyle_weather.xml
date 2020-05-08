@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
+    <!--生活指数子项布局-->
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginEnd="5dp">
+
+        <!--生活指数图标-->
+        <Button
+            android:id="@+id/weather_lifestyle_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center" />
+
+        <!--生活指数类型-->
+        <TextView
+            android:id="@+id/weather_lifestyle_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            tools:text="空气污染扩散条件指数"/>
+
+        <!--生活指数简介-->
+        <TextView
+            android:id="@+id/weather_lifestyle_brf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            tools:text="适宜"/>
+
+    </LinearLayout>
+
+
+
+    <!--生活指数详细描述-->
+    <TextView
+        android:id="@+id/weather_lifestyle_txt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:layout_gravity="center_vertical"
+        tools:text="天气较好，但因风力稍强，户外可选择对风力要求不高的运动，推荐您进行室内运动"/>
+
+</LinearLayout>

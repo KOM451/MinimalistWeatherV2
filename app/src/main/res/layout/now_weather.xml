@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
+    <!--显示实况天气信息-->
+
+    <!--温度-->
+    <TextView
+        android:id="@+id/now_tmp_degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="20dp"
+        android:textColor="#03A9F4"
+        tools:text="31°"
+        android:textSize="60sp"/>
+
+    <LinearLayout
+        android:id="@+id/show_air_quality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--天气状况-->
+        <TextView
+            android:id="@+id/now_cond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="20sp"
+            tools:text="晴"
+            android:textColor="#03A9F4"
+            android:textSize="20sp"/>
+
+        <!--分隔符-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="|"
+            android:textColor="#03A9F4"
+            android:textSize="20sp"/>
+
+        <!--空气质量-->
+        <TextView
+            android:id="@+id/now_air_qlty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="良"
+            android:textColor="#03A9F4"
+            android:textSize="20sp"/>
+
+        <!--AQI指数-->
+        <TextView
+            android:id="@+id/now_air_aqi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            tools:text="93"
+            android:textColor="#03A9F4"
+            android:textSize="20sp"/>
+
+        <!--箭头-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">"
+            android:textColor="#03A9F4"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp">
+    <!--天气预报子项布局-->
+
+    <!--显示日期-->
+    <TextView
+        android:id="@+id/weather_forecast_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center_vertical"
+        tools:text="5/2"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+
+    </LinearLayout>
+
+    <!--显示天气状况图标-->
+    <ImageView
+        android:id="@+id/weather_forecast_cond_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <!--显示天气状况-->
+    <TextView
+        android:id="@+id/weather_forecast_cond_d"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_gravity="center_vertical"
+        android:gravity="start"
+        tools:text="晴"/>
+
+    <!--显示最低温度-->
+    <TextView
+        android:id="@+id/weather_forecast_tmp_min"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="end"
+        tools:text="20°"/>
+
+    <!--显示最高温度-->
+    <TextView
+        android:id="@+id/weather_forecast_tmp_max"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="start"
+        android:layout_marginStart="5dp"
+        tools:text="32°"/>
+
+</LinearLayout>
