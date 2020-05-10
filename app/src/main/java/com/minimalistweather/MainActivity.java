@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             String[] permissions = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(MainActivity.this, permissions, 1);
         } else {
-            //startApplication();
             initLocationListener();
             initLocation();
         }
@@ -191,12 +190,6 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if(aMapLocation != null) {
                     if(aMapLocation.getErrorCode() == 0) {
-                        /*Toast.makeText(MainActivity.this, "数据来源：" + aMapLocation.getLocationType(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "国家：" + aMapLocation.getCountry(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "位置信息：" + aMapLocation.getAddress(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "地区信息：" + aMapLocation.getDistrict(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "城市编码：" + aMapLocation.getCityCode(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(MainActivity.this, "地区编码：" + aMapLocation.getAdCode(), Toast.LENGTH_SHORT).show();*/
                         String adCode = aMapLocation.getAdCode(); // 获取区域编码
                         if(!TextUtils.isEmpty(adCode)) {
                             loadWeatherByAdCode(adCode);
@@ -234,19 +227,6 @@ public class MainActivity extends AppCompatActivity {
         mLocationClient.startLocation(); // 启动定位
     }
 
-    /*private void startApplication() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(preferences.getString("weather_now", null) != null) {
-            Intent intent = new Intent(this, WeatherActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            Intent intent = new Intent(this, AreaChooseActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -259,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
                     }
-                   // startApplication();
                     initLocationListener();
                     initLocation();
                 } else {

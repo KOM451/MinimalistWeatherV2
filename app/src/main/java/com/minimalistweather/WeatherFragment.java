@@ -50,8 +50,6 @@ import okhttp3.Response;
 
 public class WeatherFragment extends Fragment {
 
-    private AMapLocationClient mLocationClient = null;
-
     private Button mChangeCityButton; // 切换城市按钮
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
@@ -142,55 +140,10 @@ public class WeatherFragment extends Fragment {
 
         if(currentWeatherId != null) {
             requestWeatherNow(currentWeatherId);
+            requestWeatherAirQuality(currentWeatherId);
             requestWeatherForecast(currentWeatherId);
             requestWeatherLifestyle(currentWeatherId);
-            requestWeatherAirQuality(currentWeatherId);
         }
-
-        /*
-         * 查看缓存中是否有天气数据：
-         * 如果有，直接解析；
-         * 反之，向服务器发起请求获取数据
-         */
-        // 1.天气实况
-        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String weatherNowStr = preferences.getString("weather_now", null);
-        if(weatherNowStr != null) {
-            HeWeatherNow weatherNow = JsonParser.parseWeatherNowResponse(weatherNowStr);
-            showWeatherNowInformation(weatherNow);
-        } else {
-            currentWeatherId = getActivity().getIntent().getStringExtra("weather_id");
-            mWeatherLayout.setVisibility(View.INVISIBLE);
-            requestWeatherNow(currentWeatherId);
-        }*/
-        // 2.天气预报
-        /*String weatherForecastStr = preferences.getString("weather_forecast", null);
-        if(weatherForecastStr != null) {
-            HeWeatherForecast weatherForecast = JsonParser.parseWeatherForecastResponse(weatherForecastStr);
-            showWeatherForecastInformation(weatherForecast);
-        } else {
-            currentWeatherId = getActivity().getIntent().getStringExtra("weather_id");
-            mWeatherForecastLayout.setVisibility(View.INVISIBLE);
-            requestWeatherForecast(currentWeatherId);
-        }*/
-        // 3.空气质量
-        /*String weatherAirQualityStr = preferences.getString("weather_air_quality", null);
-        if(weatherAirQualityStr != null) {
-            HeWeatherAirQuality weatherAirQuality = JsonParser.parseWeatherAirQuality(weatherAirQualityStr);
-            showWeatherAirQualityInformation(weatherAirQuality);
-        } else {
-            String weatherId = getActivity().getIntent().getStringExtra("weather_id");
-            requestWeatherAirQuality(weatherId);
-        }*/
-        // 4.生活指数
-       /* String weatherLifestyleStr = preferences.getString("weather_lifestyle", null);
-        if(weatherLifestyleStr != null) {
-            HeWeatherLifestyle weatherLifestyle = JsonParser.parseWeatherLifestyleResponse(weatherLifestyleStr);
-            showWeatherLifestyleInformation(weatherLifestyle);
-        } else {
-            String weatherId = getActivity().getIntent().getStringExtra("weather_id");
-            requestWeatherLifestyle(weatherId);
-        }*/
 
         /*
          * 下拉刷新逻辑
@@ -220,62 +173,6 @@ public class WeatherFragment extends Fragment {
                 transaction.replace(R.id.choose_area_fragment, new AreaChooseFragment());
                 transaction.commit();
                 drawerLayout.openDrawer(GravityCompat.END); // 打开滑动菜单
-            }
-        });
-        
-        /*mShowAirQuality.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.air_quality_fragment, new AirQualityFragment());
-                transaction.commit();
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });*/
-
-        /*
-         * 定位逻辑
-         */
-        mNavigationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* 使用高德地图定位SDK实现定位 */
-                // 初始化定位
-                mLocationClient = new AMapLocationClient(getActivity().getApplicationContext());
-                AMapLocationListener locationListener = new AMapLocationListener() {
-                    @Override
-                    public void onLocationChanged(AMapLocation aMapLocation) { // 获取定位结果
-                        if(aMapLocation != null) {
-                            if(aMapLocation.getErrorCode() == 0) { // 解析aMapLocation
-                                Toast.makeText(getContext(), "数据来源：" + aMapLocation.getLocationType(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), "国家：" + aMapLocation.getCountry(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), "位置信息：" + aMapLocation.getAddress(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), "地区信息：" + aMapLocation.getDistrict(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), "城市编码：" + aMapLocation.getCityCode(), Toast.LENGTH_SHORT).show();
-                                Toast.makeText(getContext(), "地区编码：" + aMapLocation.getAdCode(), Toast.LENGTH_SHORT).show();
-                            } else { // 定位失败
-                                Log.e("AmapError","location Error, ErrCode:"
-                                        + aMapLocation.getErrorCode() + ", errInfo:"
-                                        + aMapLocation.getErrorInfo());
-                                Log.e("AmapError:","errorDetail" + aMapLocation.getLocationDetail());
-                            }
-                        }
-                    }
-                };
-                mLocationClient.setLocationListener(locationListener);
-
-                // 配置参数并启动定位
-                AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
-                locationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy); // 高精度定位模式
-                locationClientOption.setOnceLocation(true); // 设置单次定位
-                locationClientOption.setNeedAddress(true); // 需要返回地址信息
-                locationClientOption.setHttpTimeOut(20000); // 设置定位请求超时时间
-                locationClientOption.setLocationCacheEnable(false); // 关闭缓存机制
-
-                // 启动定位
-                mLocationClient.setLocationOption(locationClientOption); // 给定位客户端对象设置定位参数
-                mLocationClient.startLocation(); // 启动定位
             }
         });
     }

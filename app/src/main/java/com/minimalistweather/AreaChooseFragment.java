@@ -39,9 +39,8 @@ import okhttp3.Response;
 
 public class AreaChooseFragment extends Fragment {
 
+    // 城市数据接口
     public static final String baseAreaUrl = "http://guolin.tech/api/china/";
-
-    private Toolbar mToolbarTitle;
 
     /**
      * 定义地区查询类型
@@ -60,8 +59,7 @@ public class AreaChooseFragment extends Fragment {
     /**
      * 声明布局中的各个组件
      */
-    /*private TextView mAreaTitleText;
-    private Button mBackButton;*/
+    private Toolbar mToolbarTitle;
 
     /**
      * RecyclerView相关
@@ -91,8 +89,6 @@ public class AreaChooseFragment extends Fragment {
         /*
          * 初始化布局中的各个组件
          */
-        /*mAreaTitleText = (TextView) view.findViewById(R.id.area_title_text);
-        mBackButton = (Button) view.findViewById(R.id.back_button);*/
         mToolbarTitle = (Toolbar) view.findViewById(R.id.toolbar);
 
         /*
@@ -109,23 +105,7 @@ public class AreaChooseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*
-         * 点击返回按钮，返回上一级地区
-         */
-        /*mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(currentLevel == LEVEL_DISTRICT) {
-                    // 当前等级为：区县级，返回市级，查询城市
-                    updateCities();
-                } else if(currentLevel == LEVEL_CITY) {
-                    // 当前等级为：市级，返回省级，查询省份
-                    updateProvinces();
-                }
-            }
-        });*/
         initToolBar();
-
         updateProvinces();
     }
 
@@ -163,8 +143,6 @@ public class AreaChooseFragment extends Fragment {
      * 更新省份数据
      */
     private void updateProvinces() {
-       /* mAreaTitleText.setText("中国");
-        mBackButton.setVisibility(View.GONE);*/
        mToolbarTitle.setTitle("中国");
         mProvinces = LitePal.findAll(Province.class); // 从数据库查询省份数据
         if(mProvinces.size() > 0) {
@@ -185,8 +163,6 @@ public class AreaChooseFragment extends Fragment {
      * 更新市级数据
      */
     private void updateCities() {
-       /* mAreaTitleText.setText(mSelectedProvince.getProvinceName());
-        mBackButton.setVisibility(View.VISIBLE);*/
        mToolbarTitle.setTitle(mSelectedProvince.getProvinceName());
         mCities = LitePal.where("provinceid = ?", String.valueOf(mSelectedProvince.getId())).find(City.class);
         if(mCities.size() > 0) {
@@ -208,8 +184,6 @@ public class AreaChooseFragment extends Fragment {
      * 更新区县数据
      */
     private void updateDistrict() {
-        /*mAreaTitleText.setText(mSelectedCity.getCityName());
-        mBackButton.setVisibility(View.VISIBLE);*/
         mToolbarTitle.setTitle(mSelectedCity.getCityName());
         mDistricts = LitePal.where("cityid = ?", String.valueOf(mSelectedCity.getId())).find(District.class);
         if(mDistricts.size() > 0) {
@@ -314,10 +288,6 @@ public class AreaChooseFragment extends Fragment {
         private String mAreaItemName;
 
         private TextView mAreaItemText;
-
-        public AreaViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
 
         public AreaViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_area, parent, false));
