@@ -10,6 +10,7 @@ import com.minimalistweather.gson_entity.HeWeatherAirQuality;
 import com.minimalistweather.gson_entity.HeWeatherForecast;
 import com.minimalistweather.gson_entity.HeWeatherLifestyle;
 import com.minimalistweather.gson_entity.HeWeatherNow;
+import com.minimalistweather.gson_entity.Location;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -146,6 +147,23 @@ public class JsonParser {
             JSONArray jsonArray = jsonObject.getJSONArray("HeWeather6");
             String weatherAirQualityContent = jsonArray.getJSONObject(0).toString();
             return new Gson().fromJson(weatherAirQualityContent, HeWeatherAirQuality.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 将通过AdCode查询到的城市信息解析成Location对象
+     * @param response
+     * @return
+     */
+    public static Location parseLocation(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather6");
+            String locationContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(locationContent, Location.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

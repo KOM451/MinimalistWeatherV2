@@ -41,8 +41,6 @@
 
     </LinearLayout>
 
-
-
     <!--生活指数详细描述-->
     <TextView
         android:id="@+id/weather_lifestyle_txt"

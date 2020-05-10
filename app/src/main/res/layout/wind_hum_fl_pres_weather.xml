@@ -1,121 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/cardview_margin"
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="5dp"
+    android:clickable="true">
 
-    <!--风力风向-->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!--风力-->
-        <TextView
-            android:id="@+id/weather_wind_sc"
-            android:layout_width="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:orientation="horizontal">
+        <!--风力风向-->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="4级"
-            android:textColor="#FF9800"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <!--风向-->
-        <TextView
-            android:id="@+id/weather_wind_dir"
-            android:layout_width="wrap_content"
+            <!--风力-->
+            <TextView
+                android:id="@+id/weather_wind_sc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="4级"
+                android:textColor="#FF9800"/>
+
+            <!--风向-->
+            <TextView
+                android:id="@+id/weather_wind_dir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="东风"
+                android:textColor="#FF9800"/>
+
+        </LinearLayout>
+
+        <!--空气湿度-->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="东风"
-            android:textColor="#FF9800"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
 
+            <!--数据-->
+            <TextView
+                android:id="@+id/weather_hum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="65%"
+                android:textColor="#2196F3"/>
+
+            <!--标签-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="空气湿度"
+                android:textColor="#2196F3"/>
+
+        </LinearLayout>
+
+        <!--体感温度-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!--数据-->
+            <TextView
+                android:id="@+id/weather_fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="25℃"
+                android:textColor="#4CAF50"/>
+
+            <!--标签-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="体感温度"
+                android:textColor="#4CAF50"/>
+
+        </LinearLayout>
+
+        <!--气体压强-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!--数据-->
+            <TextView
+                android:id="@+id/weather_pres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:text="948hPa"
+                android:textColor="#03A9F4"/>
+
+            <!--标签-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="气体压强"
+                android:textColor="#03A9F4"/>
+
+        </LinearLayout>
     </LinearLayout>
 
-    <!--空气湿度-->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
-        <!--数据-->
-        <TextView
-            android:id="@+id/weather_hum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="65%"
-            android:textColor="#2196F3"/>
 
-        <!--标签-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="空气湿度"
-            android:textColor="#2196F3"/>
-
-    </LinearLayout>
-
-    <!--体感温度-->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!--数据-->
-        <TextView
-            android:id="@+id/weather_fl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="25℃"
-            android:textColor="#4CAF50"/>
-
-        <!--标签-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="体感温度"
-            android:textColor="#4CAF50"/>
-
-    </LinearLayout>
-
-    <!--气体压强-->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!--数据-->
-        <TextView
-            android:id="@+id/weather_pres"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            tools:text="948hPa"
-            android:textColor="#03A9F4"/>
-
-        <!--标签-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="气体压强"
-            android:textColor="#03A9F4"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>

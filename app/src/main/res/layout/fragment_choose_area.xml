@@ -6,13 +6,14 @@
     android:layout_height="match_parent"
     android:background="#fff">
 
+    <include layout="@layout/toolbar"/>
     <!--标题栏-->
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimaryDark">
 
-        <!--显示上一级的地区名称-->
+        &lt;!&ndash;显示上一级的地区名称&ndash;&gt;
         <TextView
             android:id="@+id/area_title_text"
             android:layout_width="wrap_content"
@@ -22,7 +23,7 @@
             android:textColor="#fff"
             android:textSize="20sp"/>
 
-        <!--返回上一级的按钮-->
+        &lt;!&ndash;返回上一级的按钮&ndash;&gt;
         <Button
             android:id="@+id/back_button"
             android:layout_width="25dp"
@@ -32,7 +33,7 @@
             android:layout_marginStart="10dp"
             android:background="@drawable/ic_back"/>
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <!--显示地区列表-->
     <androidx.recyclerview.widget.RecyclerView

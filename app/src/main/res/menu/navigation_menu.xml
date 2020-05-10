@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/choose_city"
+            android:icon="@drawable/add_city"
+            android:title="选择城市" />
+
+        <item
+            android:id="@+id/manage_city"
+            android:icon="@drawable/multi_city"
+            android:title="管理城市" />
+
+        <item
+            android:id="@+id/config"
+            android:icon="@drawable/setting"
+            android:title="设置" />
+    </group>
+
+    <item android:title="极简天气">
+        <menu>
+            <item
+                android:id="@+id/about"
+                android:icon="@drawable/about"
+                android:title="关于" />
+            <item
+                android:id="@+id/app_exit"
+                android:icon="@drawable/out"
+                android:title="退出" />
+        </menu>
+    </item>
+</menu>

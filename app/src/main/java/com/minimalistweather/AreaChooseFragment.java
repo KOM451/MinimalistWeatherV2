@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +41,8 @@ public class AreaChooseFragment extends Fragment {
 
     public static final String baseAreaUrl = "http://guolin.tech/api/china/";
 
+    private Toolbar mToolbarTitle;
+
     /**
      * 定义地区查询类型
      */
@@ -56,8 +60,8 @@ public class AreaChooseFragment extends Fragment {
     /**
      * 声明布局中的各个组件
      */
-    private TextView mAreaTitleText;
-    private Button mBackButton;
+    /*private TextView mAreaTitleText;
+    private Button mBackButton;*/
 
     /**
      * RecyclerView相关
@@ -75,7 +79,7 @@ public class AreaChooseFragment extends Fragment {
 
     private Province mSelectedProvince; // 选中的省级规划
     private City mSelectedCity; // 选中的市级规划
-    private int currentLevel; // 当前选中地区等级
+    private int mCurrentLevel; // 当前选中地区等级
 
     private ProgressDialog mProgressDialog; // 查询进度框
 
@@ -87,8 +91,9 @@ public class AreaChooseFragment extends Fragment {
         /*
          * 初始化布局中的各个组件
          */
-        mAreaTitleText = (TextView) view.findViewById(R.id.area_title_text);
-        mBackButton = (Button) view.findViewById(R.id.back_button);
+        /*mAreaTitleText = (TextView) view.findViewById(R.id.area_title_text);
+        mBackButton = (Button) view.findViewById(R.id.back_button);*/
+        mToolbarTitle = (Toolbar) view.findViewById(R.id.toolbar);
 
         /*
          * 初始化RecyclerView
@@ -107,7 +112,7 @@ public class AreaChooseFragment extends Fragment {
         /*
          * 点击返回按钮，返回上一级地区
          */
-        mBackButton.setOnClickListener(new View.OnClickListener() {
+        /*mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(currentLevel == LEVEL_DISTRICT) {
@@ -118,17 +123,49 @@ public class AreaChooseFragment extends Fragment {
                     updateProvinces();
                 }
             }
-        });
+        });*/
+        initToolBar();
 
         updateProvinces();
+    }
+
+    private void initToolBar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbarTitle);
+        setHasOptionsMenu(true);
+        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        mToolbarTitle.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCurrentLevel == LEVEL_PROVINCE) {
+                    if(getActivity() instanceof MainActivity) {
+                        WeatherFragment fragment = (WeatherFragment) getActivity()
+                                .getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
+                        fragment.drawerLayout.closeDrawers();
+                    } else if(getActivity() instanceof  AreaChooseActivity) {
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherFragment fragment = (WeatherFragment) getActivity()
+                                .getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        fragment.drawerLayout.closeDrawers();
+                    }
+                } else if(mCurrentLevel == LEVEL_CITY) {
+                    updateProvinces();
+                } else if(mCurrentLevel == LEVEL_DISTRICT) {
+                    updateCities();
+                }
+            }
+        });
     }
 
     /**
      * 更新省份数据
      */
     private void updateProvinces() {
-        mAreaTitleText.setText("中国");
-        mBackButton.setVisibility(View.GONE);
+       /* mAreaTitleText.setText("中国");
+        mBackButton.setVisibility(View.GONE);*/
+       mToolbarTitle.setTitle("中国");
         mProvinces = LitePal.findAll(Province.class); // 从数据库查询省份数据
         if(mProvinces.size() > 0) {
             // 数据库有数据，直接更新
@@ -137,7 +174,8 @@ public class AreaChooseFragment extends Fragment {
                 mAreaData.add(province.getProvinceName());
             }
             mAreaAdapter.notifyDataSetChanged();
-            currentLevel = LEVEL_PROVINCE;
+            mRecyclerView.smoothScrollToPosition(0);
+            mCurrentLevel = LEVEL_PROVINCE;
         } else {
             queryAreaFromServer(baseAreaUrl, TYPE_PROVINCE);
         }
@@ -147,8 +185,9 @@ public class AreaChooseFragment extends Fragment {
      * 更新市级数据
      */
     private void updateCities() {
-        mAreaTitleText.setText(mSelectedProvince.getProvinceName());
-        mBackButton.setVisibility(View.VISIBLE);
+       /* mAreaTitleText.setText(mSelectedProvince.getProvinceName());
+        mBackButton.setVisibility(View.VISIBLE);*/
+       mToolbarTitle.setTitle(mSelectedProvince.getProvinceName());
         mCities = LitePal.where("provinceid = ?", String.valueOf(mSelectedProvince.getId())).find(City.class);
         if(mCities.size() > 0) {
             mAreaData.clear();
@@ -156,7 +195,8 @@ public class AreaChooseFragment extends Fragment {
                 mAreaData.add(city.getCityName());
             }
             mAreaAdapter.notifyDataSetChanged();
-            currentLevel = LEVEL_CITY;
+            mRecyclerView.smoothScrollToPosition(0);
+            mCurrentLevel = LEVEL_CITY;
         } else {
             int provinceCode = mSelectedProvince.getProvinceCode();
             String url = baseAreaUrl + provinceCode;
@@ -168,8 +208,9 @@ public class AreaChooseFragment extends Fragment {
      * 更新区县数据
      */
     private void updateDistrict() {
-        mAreaTitleText.setText(mSelectedCity.getCityName());
-        mBackButton.setVisibility(View.VISIBLE);
+        /*mAreaTitleText.setText(mSelectedCity.getCityName());
+        mBackButton.setVisibility(View.VISIBLE);*/
+        mToolbarTitle.setTitle(mSelectedCity.getCityName());
         mDistricts = LitePal.where("cityid = ?", String.valueOf(mSelectedCity.getId())).find(District.class);
         if(mDistricts.size() > 0) {
             mAreaData.clear();
@@ -177,7 +218,8 @@ public class AreaChooseFragment extends Fragment {
                 mAreaData.add(district.getDistrictName());
             }
             mAreaAdapter.notifyDataSetChanged();
-            currentLevel = LEVEL_DISTRICT;
+            mRecyclerView.smoothScrollToPosition(0);
+            mCurrentLevel = LEVEL_DISTRICT;
         } else {
             int provinceCode = mSelectedProvince.getProvinceCode();
             int cityCode = mSelectedCity.getCityCode();
@@ -292,21 +334,30 @@ public class AreaChooseFragment extends Fragment {
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if(currentLevel == LEVEL_PROVINCE) { // 当前选中等级为省，查询市
+            if(mCurrentLevel == LEVEL_PROVINCE) { // 当前选中等级为省，查询市
                 mSelectedProvince = mProvinces.get(position);
                 updateCities();
-            } else if(currentLevel == LEVEL_CITY) { // 当前选中等级为市，查询区县
+            } else if(mCurrentLevel == LEVEL_CITY) { // 当前选中等级为市，查询区县
                 mSelectedCity = mCities.get(position);
                 updateDistrict();
-            } else if(currentLevel == LEVEL_DISTRICT) { // 当选中项为区，跳转到天气显示
+            } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当选中项为区，跳转到天气显示
                 String weatherId = mDistricts.get(position).getWeatherId();
                 if(getActivity() instanceof AreaChooseActivity) {
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("weather_id", weatherId);
-                    startActivity(intent);
+                    getActivity().startActivity(intent);
                     getActivity().finish();
                 } else if(getActivity() instanceof WeatherActivity) {
                     WeatherFragment fragment = (WeatherFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment.drawerLayout.closeDrawers();
+                    fragment.refresh.setRefreshing(false);
+                    fragment.currentWeatherId = weatherId;
+                    fragment.requestWeatherNow(weatherId);
+                    fragment.requestWeatherAirQuality(weatherId);
+                    fragment.requestWeatherForecast(weatherId);
+                    fragment.requestWeatherLifestyle(weatherId);
+                } else if(getActivity() instanceof MainActivity) {
+                    WeatherFragment fragment = (WeatherFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
                     fragment.drawerLayout.closeDrawers();
                     fragment.refresh.setRefreshing(false);
                     fragment.currentWeatherId = weatherId;

@@ -1,8 +1,10 @@
 package com.minimalistweather;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -22,6 +25,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.minimalistweather.gson_entity.DailyForecast;
 import com.minimalistweather.gson_entity.HeWeatherAirQuality;
 import com.minimalistweather.gson_entity.HeWeatherForecast;
@@ -43,6 +50,8 @@ import okhttp3.Response;
 
 public class WeatherFragment extends Fragment {
 
+    private AMapLocationClient mLocationClient = null;
+
     private Button mChangeCityButton; // 切换城市按钮
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
@@ -63,6 +72,8 @@ public class WeatherFragment extends Fragment {
 
     private TextView mNowAirAqi;  // 实况AQI指数
 
+    private TextView mNowAirPm25; // 实况PM2.5
+
     private TextView mWindSc; // 风力
 
     private TextView mWindDir; // 风向
@@ -79,6 +90,19 @@ public class WeatherFragment extends Fragment {
     
     private LinearLayout mShowAirQuality; // 用于点击展示空气质量
 
+    private Button mNavigationButton; // 用于定位
+
+    private Toolbar mToolbar; // 用于得到MainActivity（宿主）的ToolBar
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof MainActivity) { // 得到MainActivity（宿主）中的ToolBar
+            MainActivity activity = (MainActivity) context;
+            mToolbar = (Toolbar) activity.findViewById(R.id.toolbar);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -93,6 +117,7 @@ public class WeatherFragment extends Fragment {
         mNowCond = (TextView) view.findViewById(R.id.now_cond);
         mNowAirQlty = (TextView) view.findViewById(R.id.now_air_qlty);
         mNowAirAqi = (TextView) view.findViewById(R.id.now_air_aqi);
+        mNowAirPm25 = (TextView) view.findViewById(R.id.now_air_pm25);
         mWindSc = (TextView) view.findViewById(R.id.weather_wind_sc);
         mWindDir = (TextView) view.findViewById(R.id.weather_wind_dir);
         mHum = (TextView) view.findViewById(R.id.weather_hum);
@@ -104,7 +129,9 @@ public class WeatherFragment extends Fragment {
         refresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
         mChangeCityButton = (Button) view.findViewById(R.id.change_city_button);
-        mShowAirQuality = (LinearLayout) view.findViewById(R.id.show_air_quality);
+        //mShowAirQuality = (LinearLayout) view.findViewById(R.id.show_air_quality);
+        mNavigationButton = (Button) view.findViewById(R.id.navigation_button);
+        currentWeatherId = getArguments().getString("weather_id", null);
 
         return view;
     }
@@ -113,13 +140,20 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if(currentWeatherId != null) {
+            requestWeatherNow(currentWeatherId);
+            requestWeatherForecast(currentWeatherId);
+            requestWeatherLifestyle(currentWeatherId);
+            requestWeatherAirQuality(currentWeatherId);
+        }
+
         /*
          * 查看缓存中是否有天气数据：
          * 如果有，直接解析；
          * 反之，向服务器发起请求获取数据
          */
         // 1.天气实况
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        /*SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String weatherNowStr = preferences.getString("weather_now", null);
         if(weatherNowStr != null) {
             HeWeatherNow weatherNow = JsonParser.parseWeatherNowResponse(weatherNowStr);
@@ -128,9 +162,9 @@ public class WeatherFragment extends Fragment {
             currentWeatherId = getActivity().getIntent().getStringExtra("weather_id");
             mWeatherLayout.setVisibility(View.INVISIBLE);
             requestWeatherNow(currentWeatherId);
-        }
+        }*/
         // 2.天气预报
-        String weatherForecastStr = preferences.getString("weather_forecast", null);
+        /*String weatherForecastStr = preferences.getString("weather_forecast", null);
         if(weatherForecastStr != null) {
             HeWeatherForecast weatherForecast = JsonParser.parseWeatherForecastResponse(weatherForecastStr);
             showWeatherForecastInformation(weatherForecast);
@@ -138,25 +172,25 @@ public class WeatherFragment extends Fragment {
             currentWeatherId = getActivity().getIntent().getStringExtra("weather_id");
             mWeatherForecastLayout.setVisibility(View.INVISIBLE);
             requestWeatherForecast(currentWeatherId);
-        }
+        }*/
         // 3.空气质量
-        String weatherAirQualityStr = preferences.getString("weather_air_quality", null);
+        /*String weatherAirQualityStr = preferences.getString("weather_air_quality", null);
         if(weatherAirQualityStr != null) {
             HeWeatherAirQuality weatherAirQuality = JsonParser.parseWeatherAirQuality(weatherAirQualityStr);
             showWeatherAirQualityInformation(weatherAirQuality);
         } else {
             String weatherId = getActivity().getIntent().getStringExtra("weather_id");
             requestWeatherAirQuality(weatherId);
-        }
+        }*/
         // 4.生活指数
-        String weatherLifestyleStr = preferences.getString("weather_lifestyle", null);
+       /* String weatherLifestyleStr = preferences.getString("weather_lifestyle", null);
         if(weatherLifestyleStr != null) {
             HeWeatherLifestyle weatherLifestyle = JsonParser.parseWeatherLifestyleResponse(weatherLifestyleStr);
             showWeatherLifestyleInformation(weatherLifestyle);
         } else {
             String weatherId = getActivity().getIntent().getStringExtra("weather_id");
             requestWeatherLifestyle(weatherId);
-        }
+        }*/
 
         /*
          * 下拉刷新逻辑
@@ -164,11 +198,14 @@ public class WeatherFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestWeatherNow(currentWeatherId); // 请求实况天气数据
-                requestWeatherAirQuality(currentWeatherId); // 请求空气质量数据
-                requestWeatherForecast(currentWeatherId); // 请求天气预报数据
-                requestWeatherLifestyle(currentWeatherId); // 请求生活指数数据
-                // 在最后执行的请求结束时，隐藏刷新进度
+                if(currentWeatherId != null) {
+                    requestWeatherNow(currentWeatherId); // 请求实况天气数据
+                    requestWeatherAirQuality(currentWeatherId); // 请求空气质量数据
+                    requestWeatherForecast(currentWeatherId); // 请求天气预报数据
+                    requestWeatherLifestyle(currentWeatherId); // 请求生活指数数据
+                    // 在最后执行的请求结束时，隐藏刷新进度
+                }
+
             }
         });
 
@@ -186,7 +223,7 @@ public class WeatherFragment extends Fragment {
             }
         });
         
-        mShowAirQuality.setOnClickListener(new View.OnClickListener() {
+        /*mShowAirQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -195,7 +232,64 @@ public class WeatherFragment extends Fragment {
                 transaction.commit();
                 drawerLayout.openDrawer(GravityCompat.START);
             }
+        });*/
+
+        /*
+         * 定位逻辑
+         */
+        mNavigationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* 使用高德地图定位SDK实现定位 */
+                // 初始化定位
+                mLocationClient = new AMapLocationClient(getActivity().getApplicationContext());
+                AMapLocationListener locationListener = new AMapLocationListener() {
+                    @Override
+                    public void onLocationChanged(AMapLocation aMapLocation) { // 获取定位结果
+                        if(aMapLocation != null) {
+                            if(aMapLocation.getErrorCode() == 0) { // 解析aMapLocation
+                                Toast.makeText(getContext(), "数据来源：" + aMapLocation.getLocationType(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "国家：" + aMapLocation.getCountry(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "位置信息：" + aMapLocation.getAddress(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "地区信息：" + aMapLocation.getDistrict(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "城市编码：" + aMapLocation.getCityCode(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "地区编码：" + aMapLocation.getAdCode(), Toast.LENGTH_SHORT).show();
+                            } else { // 定位失败
+                                Log.e("AmapError","location Error, ErrCode:"
+                                        + aMapLocation.getErrorCode() + ", errInfo:"
+                                        + aMapLocation.getErrorInfo());
+                                Log.e("AmapError:","errorDetail" + aMapLocation.getLocationDetail());
+                            }
+                        }
+                    }
+                };
+                mLocationClient.setLocationListener(locationListener);
+
+                // 配置参数并启动定位
+                AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
+                locationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy); // 高精度定位模式
+                locationClientOption.setOnceLocation(true); // 设置单次定位
+                locationClientOption.setNeedAddress(true); // 需要返回地址信息
+                locationClientOption.setHttpTimeOut(20000); // 设置定位请求超时时间
+                locationClientOption.setLocationCacheEnable(false); // 关闭缓存机制
+
+                // 启动定位
+                mLocationClient.setLocationOption(locationClientOption); // 给定位客户端对象设置定位参数
+                mLocationClient.startLocation(); // 启动定位
+            }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String weatherId = getActivity().getIntent().getStringExtra("weather_id");
+        if(weatherId != null) {
+            requestWeatherNow(currentWeatherId);
+            requestWeatherAirQuality(currentWeatherId);
+            requestWeatherForecast(currentWeatherId);
+            requestWeatherLifestyle(currentWeatherId);
+        }
     }
 
     ////////////////////////////////////////////
@@ -232,7 +326,7 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_lifestyle", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherLifestyleInformation(weatherLifestyle); // 更新生活指数数据
-                            Toast.makeText(getContext(), "生活指数获取成功", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "生活指数获取成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "获取生活指数失败", Toast.LENGTH_SHORT).show();
                         }
@@ -256,7 +350,8 @@ public class WeatherFragment extends Fragment {
                     public void run() {
                         mNowAirQlty.setText("NaN");
                         mNowAirAqi.setText("NaN");
-                        mShowAirQuality.setEnabled(false);
+                        mNowAirPm25.setText("NaN");
+                        //mShowAirQuality.setEnabled(false);
                         Toast.makeText(getContext(), "获取实况空气质量数据失败", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -274,12 +369,13 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_air_quality", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherAirQualityInformation(weatherAirQuality); // 更新实况空气数据
-                            mShowAirQuality.setEnabled(true);
-                            Toast.makeText(getContext(), "实况空气质量数据获取成功", Toast.LENGTH_SHORT).show();
+                            //mShowAirQuality.setEnabled(true);
+                            //Toast.makeText(getContext(), "实况空气质量数据获取成功", Toast.LENGTH_SHORT).show();
                         } else {
                             mNowAirQlty.setText("NaN");
                             mNowAirAqi.setText("NaN");
-                            mShowAirQuality.setEnabled(false);
+                            mNowAirPm25.setText("NaN");
+                            //mShowAirQuality.setEnabled(false);
                             Toast.makeText(getContext(), "实况空气质量数据获取失败", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -319,7 +415,7 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_forecast", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherForecastInformation(weatherForecast); // 更新天气预报信息
-                            Toast.makeText(getContext(), "天气预报数据获取成功", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "天气预报数据获取成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "天气预报数据获取失败", Toast.LENGTH_SHORT).show();
                         }
@@ -359,7 +455,7 @@ public class WeatherFragment extends Fragment {
                             editor.putString("weather_now", responseStr);
                             editor.apply(); // 更新缓存
                             showWeatherNowInformation(weatherNow); // 更新实况天气信息
-                            Toast.makeText(getContext(), "获取实况天气成功", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), "获取实况天气成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getContext(), "获取实况天气失败", Toast.LENGTH_SHORT).show();
                         }
@@ -423,6 +519,7 @@ public class WeatherFragment extends Fragment {
     private void showWeatherAirQualityInformation(HeWeatherAirQuality weatherAirQuality) {
         mNowAirQlty.setText(weatherAirQuality.airNowCity.qlty);
         mNowAirAqi.setText(weatherAirQuality.airNowCity.aqi);
+        mNowAirPm25.setText(weatherAirQuality.airNowCity.pm25);
     }
 
     /**
@@ -442,8 +539,8 @@ public class WeatherFragment extends Fragment {
 
             weatherForecastDate.setText(forecast.date);
             weatherForecastCondD.setText(forecast.cond_txt_d);
-            weatherForecastTmpMin.setText(forecast.tmp_min + "°");
-            weatherForecastTmpMax.setText(forecast.tmp_max + "°");
+            weatherForecastTmpMin.setText(forecast.tmp_min + "℃");
+            weatherForecastTmpMax.setText(forecast.tmp_max + "℃");
 
             /*
              * 动态获取天气图标
@@ -481,6 +578,8 @@ public class WeatherFragment extends Fragment {
         mHum.setText(hum);
         mFl.setText(fl);
         mPres.setText(pref);
+
+        mToolbar.setTitle(districtName);
 
         mWeatherLayout.setVisibility(View.VISIBLE);
     }

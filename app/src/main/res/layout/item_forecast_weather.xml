@@ -4,60 +4,69 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="15dp">
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:paddingBottom="16dp"
+    android:paddingEnd="10dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp">
     <!--天气预报子项布局-->
+    
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/week"/>
 
     <!--显示日期-->
     <TextView
         android:id="@+id/weather_forecast_date"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:paddingLeft="10dp"
         tools:text="5/2"/>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2">
-
-    </LinearLayout>
 
     <!--显示天气状况图标-->
     <ImageView
         android:id="@+id/weather_forecast_cond_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
 
     <!--显示天气状况-->
     <TextView
         android:id="@+id/weather_forecast_cond_d"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:layout_gravity="center_vertical"
-        android:gravity="start"
+        android:layout_weight="1"
+        android:paddingLeft="10dp"
         tools:text="晴"/>
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/tmpdown"/>
 
     <!--显示最低温度-->
     <TextView
         android:id="@+id/weather_forecast_tmp_min"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="end"
-        tools:text="20°"/>
+        android:paddingLeft="10dp"
+        tools:text="20℃"/>
+    
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/tmpup"/>
 
     <!--显示最高温度-->
     <TextView
         android:id="@+id/weather_forecast_tmp_max"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center"
-        android:gravity="start"
-        android:layout_marginStart="5dp"
-        tools:text="32°"/>
+        android:paddingLeft="10dp"
+        tools:text="32℃"/>
 
 </LinearLayout>

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <!--<color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">#03DAC5</color>-->
+    <color name="colorPrimary">#106c99</color>
+    <color name="colorPrimaryDark">#0D4A6A</color>
+    <color name="colorAccent">#FC413D</color>
+    <color name="lineColor">#78d3d8d9</color>
+    <color name="aboutIcon">#106c99</color>
+    <color name="defaultTextColor">#6f6f6f</color>
+    <color name="statusBarColor">#00000000</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="toolbarColor">#FFFFFF</color>
 </resources>
