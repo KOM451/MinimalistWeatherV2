@@ -6,41 +6,41 @@
     <!--天气信息头布局-->
 
     <!--定位导航图标-->
-    <Button
+   <!-- <Button
         android:id="@+id/navigation_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="10dp"
         android:layout_centerVertical="true"
-        android:background="@drawable/navigation" />
+        android:background="@drawable/location" />-->
 
     <!--城市切换按钮-->
-    <Button
+    <!--<Button
         android:id="@+id/change_city_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="15dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/ic_settings"/>
+        android:background="@drawable/ic_settings"/>-->
 
     <!--位置图标-->
-    <Button
+    <!--<Button
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="5dp"
         android:layout_toStartOf="@+id/weather_title_district"
         android:layout_centerVertical="true"
-        android:background="@drawable/ic_location_on" />
+        android:background="@drawable/ic_location_on" />-->
 
     <!--显示地区名称-->
-    <TextView
+    <!--<TextView
         android:id="@+id/weather_title_district"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         tools:text="渝北"
-        android:textSize="20sp"/>
+        android:textSize="20sp"/>-->
 
 </RelativeLayout>
