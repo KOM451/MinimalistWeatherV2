@@ -62,6 +62,8 @@ public class WeatherFragment extends Fragment {
 
     private TextView mWeatherTitleDistrict; // 头部布局地区名
 
+    private ImageView mCondIcon; // 实况天气图标
+
     private TextView mNowTmpDegree; // 实况温度
 
     private TextView mNowCond; // 实况天气状况
@@ -111,6 +113,7 @@ public class WeatherFragment extends Fragment {
          */
         mWeatherLayout = (ScrollView) view.findViewById(R.id.weather_layout);
         mWeatherTitleDistrict = (TextView) view.findViewById(R.id.weather_title_district);
+        mCondIcon = (ImageView) view.findViewById(R.id.cond_icon);
         mNowTmpDegree = (TextView) view.findViewById(R.id.now_tmp_degree);
         mNowCond = (TextView) view.findViewById(R.id.now_cond);
         mNowAirQlty = (TextView) view.findViewById(R.id.now_air_qlty);
@@ -477,6 +480,13 @@ public class WeatherFragment extends Fragment {
         mPres.setText(pref);
 
         mToolbar.setTitle(districtName);
+
+        /*
+         * 动态获取实况天气图标
+         */
+        String iconName = "he" + weatherNow.now.cond_code;
+        int iconCode = getResources().getIdentifier(iconName, "drawable", "com.minimalistweather");
+        mCondIcon.setImageResource(iconCode);
 
         mWeatherLayout.setVisibility(View.VISIBLE);
     }
