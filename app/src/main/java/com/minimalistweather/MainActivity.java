@@ -40,9 +40,12 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    public AMapLocationClient mLocationClient = null;
-    public AMapLocationClientOption mLocationClientOption = null;
-    private AMapLocationListener mLocationListener;
+    /**
+     * 定位相关
+     */
+    public AMapLocationClient mLocationClient = null; // 声明定位客户端
+    public AMapLocationClientOption mLocationClientOption = null; // 用于设置定位的模式和相关参数
+    private AMapLocationListener mLocationListener; // 声明回调监听器
 
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
@@ -54,9 +57,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        List<String> permissionList = new ArrayList<>();
         initNavigation();
         initToolBar();
+
+        /*
+         * 动态申请定位所需要的权限
+         */
+        List<String> permissionList = new ArrayList<>();
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 申请网络定位权限
             permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -100,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
         }
+    }
+
+    private void initToolBar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                mToolbar, R.string.drawer_open, R.string.drawer_close);
+        toggle.syncState();
+        mDrawerLayout.addDrawerListener(toggle);
     }
 
     private void initNavigation() {
@@ -162,21 +179,9 @@ public class MainActivity extends AppCompatActivity {
                     mFragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                     fragmentTransaction.add(R.id.coordinator_layout, weatherFragment).commit();
-                } else {
-
                 }
             }
         });
-    }
-
-    private void initToolBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolbar, R.string.drawer_open, R.string.drawer_close);
-        toggle.syncState();
-        mDrawerLayout.addDrawerListener(toggle);
     }
 
     /**
