@@ -15,7 +15,7 @@
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:src="@drawable/week"/>
+        android:src="@drawable/calendar"/>
 
     <!--显示日期-->
     <TextView
@@ -44,7 +44,7 @@
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:src="@drawable/tmpdown"/>
+        android:src="@drawable/down_arrow"/>
 
     <!--显示最低温度-->
     <TextView
@@ -58,7 +58,7 @@
     <ImageView
         android:layout_width="22dp"
         android:layout_height="22dp"
-        android:src="@drawable/tmpup"/>
+        android:src="@drawable/up_arrow"/>
 
     <!--显示最高温度-->
     <TextView
