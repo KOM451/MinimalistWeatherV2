@@ -123,7 +123,7 @@ public class AreaChooseFragment extends Fragment {
                         WeatherFragment fragment = (WeatherFragment) getActivity()
                                 .getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
                         fragment.drawerLayout.closeDrawers();
-                    } else if(getActivity() instanceof  AreaChooseActivity) {  // 宿主为AreaActivity，销毁该Activity
+                    } else if(getActivity() instanceof AreaChooseActivity) {  // 宿主为AreaActivity，销毁该Activity
                         getActivity().finish();
                     } else if (getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，通过R.id.fragment_container获取WeatherFragment，并关闭抽屉视图
                         WeatherFragment fragment = (WeatherFragment) getActivity()

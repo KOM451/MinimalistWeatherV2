@@ -127,11 +127,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.choose_city:
-                        Intent intent = new Intent(MainActivity.this, AreaChooseActivity.class);
-                        startActivity(intent);
+                        Intent intentChooseCity = new Intent(MainActivity.this, AreaChooseActivity.class);
+                        startActivity(intentChooseCity);
                         break;
                     case R.id.manage_city:
-                        Toast.makeText(MainActivity.this, "管理城市", Toast.LENGTH_SHORT).show();
+                        Intent intentManageCity = new Intent(MainActivity.this, CityManageActivity.class);
+                        startActivity(intentManageCity);
+                        break;
+                    case R.id.relocate:
+                        initLocationListener();
+                        initLocation();
                         break;
                     case R.id.about:
                         Toast.makeText(MainActivity.this, "关于", Toast.LENGTH_SHORT).show();

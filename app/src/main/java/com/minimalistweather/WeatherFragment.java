@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ import okhttp3.Response;
 
 public class WeatherFragment extends Fragment {
 
-    private Button mChangeCityButton; // 切换城市按钮
+    //private Button mChangeCityButton; // 切换城市按钮
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
 
@@ -89,9 +91,9 @@ public class WeatherFragment extends Fragment {
 
     private LinearLayout mWeatherLifestyleLayout; // 生活指数布局
     
-    private LinearLayout mShowAirQuality; // 用于点击展示空气质量
+    //private LinearLayout mShowAirQuality; // 用于点击展示空气质量
 
-    private Button mNavigationButton; // 用于定位
+    //private Button mNavigationButton; // 用于定位
 
     private Toolbar mToolbar; // 用于得到MainActivity（宿主）的ToolBar
 
@@ -101,7 +103,8 @@ public class WeatherFragment extends Fragment {
         if(context instanceof MainActivity) { // 得到MainActivity（宿主）中的ToolBar
             MainActivity activity = (MainActivity) context;
             mToolbar = (Toolbar) activity.findViewById(R.id.toolbar);
-            mToolbar.inflateMenu(R.menu.weather_menu);
+            mToolbar.getMenu().clear();
+            mToolbar.inflateMenu(R.menu.toolbar_menu);
         }
     }
 
@@ -131,9 +134,9 @@ public class WeatherFragment extends Fragment {
         refresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
-        //mChangeCityButton = (Button) view.findViewById(R.id.change_city_button);
+        //mChangeCityButton = (Button) view.findViewById(R.id.change_city);
         //mShowAirQuality = (LinearLayout) view.findViewById(R.id.show_air_quality);
-        mNavigationButton = (Button) view.findViewById(R.id.navigation_button);
+        //mNavigationButton = (Button) view.findViewById(R.id.navigation_button);
         currentWeatherId = getArguments().getString("weather_id", null);
 
         return view;
@@ -180,12 +183,14 @@ public class WeatherFragment extends Fragment {
                 drawerLayout.openDrawer(GravityCompat.END); // 打开滑动菜单
             }
         });*/
-
+        /*
+         * 为Toolbar上的菜单设置点击事件
+         */
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.change_city:
+                    case R.id.change_city: // 切换城市
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.choose_area_fragment, new AreaChooseFragment());
@@ -193,7 +198,7 @@ public class WeatherFragment extends Fragment {
                         drawerLayout.openDrawer(GravityCompat.END); // 打开滑动菜单
                         break;
                 }
-                return true;
+                return false;
             }
         });
     }

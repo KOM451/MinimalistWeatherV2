@@ -45,11 +45,11 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <FrameLayout
+<!--        <FrameLayout
             android:id="@+id/air_quality_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"/>
+            android:layout_gravity="start"/>-->
 
         <FrameLayout
             android:id="@+id/choose_area_fragment"

@@ -5,12 +5,17 @@
         <item
             android:id="@+id/choose_city"
             android:icon="@drawable/add_city"
-            android:title="选择城市" />
+            android:title="添加城市" />
 
         <item
             android:id="@+id/manage_city"
             android:icon="@drawable/multi_city"
-            android:title="管理城市" />
+            android:title="城市管理" />
+
+        <item
+            android:id="@+id/relocate"
+            android:icon="@drawable/location_mini"
+            android:title="重新定位" />
 
         <item
             android:id="@+id/config"
