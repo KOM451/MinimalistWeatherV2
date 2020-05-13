@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     weatherFragment.setArguments(bundle);
                     mFragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.coordinator_layout, weatherFragment).commit();
+                    fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
                 }
             }
         });
@@ -227,10 +227,10 @@ public class MainActivity extends AppCompatActivity {
         mLocationClientOption = new AMapLocationClientOption(); // 初始化定位参数
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy); // 高精度模式
         mLocationClientOption.setNeedAddress(true); // 返回地址信息
-        mLocationClientOption.setOnceLocation(false); // 取消单次定位
+        mLocationClientOption.setOnceLocation(true); // 单次定位
         mLocationClientOption.setWifiScan(true); // 强制刷新wifi
         mLocationClientOption.setMockEnable(false); // 禁止模拟定位
-        mLocationClientOption.setInterval(2000); // 设置定位时间间隔
+        //mLocationClientOption.setInterval(2000); // 设置定位时间间隔
         mLocationClient.setLocationOption(mLocationClientOption); // 设置定位参数
         mLocationClient.startLocation(); // 启动定位
     }
