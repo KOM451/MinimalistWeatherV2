@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.minimalistweather.database_entity.City;
 import com.minimalistweather.database_entity.District;
+import com.minimalistweather.database_entity.ManagedCity;
 import com.minimalistweather.database_entity.Province;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
@@ -115,26 +116,24 @@ public class AreaChooseFragment extends Fragment {
         if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() { // 设置导航按钮侦听器
-            @Override
-            public void onClick(View v) {
-                if(mCurrentLevel == LEVEL_PROVINCE) { // 当前选择等级为省
-                    if(getActivity() instanceof MainActivity) { // 宿主为MainActivity，通过R.id.coordinator_layout获取WeatherFragment，并关闭抽屉视图
-                        WeatherFragment fragment = (WeatherFragment) getActivity()
-                                .getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
-                        fragment.drawerLayout.closeDrawers();
-                    } else if(getActivity() instanceof AreaChooseActivity) {  // 宿主为AreaActivity，销毁该Activity
-                        getActivity().finish();
-                    } else if (getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，通过R.id.fragment_container获取WeatherFragment，并关闭抽屉视图
-                        WeatherFragment fragment = (WeatherFragment) getActivity()
-                                .getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                        fragment.drawerLayout.closeDrawers();
-                    }
-                } else if(mCurrentLevel == LEVEL_CITY) { // 当前选择为市，查询更新省列表
-                    updateProvinces();
-                } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当前选择为地区，查询更新市列表
-                    updateCities();
+        // 设置导航按钮侦听器
+        mToolbar.setNavigationOnClickListener(view -> {
+            if(mCurrentLevel == LEVEL_PROVINCE) { // 当前选择等级为省
+                if(getActivity() instanceof MainActivity) { // 宿主为MainActivity，通过R.id.coordinator_layout获取WeatherFragment，并关闭抽屉视图
+                    WeatherFragment fragment = (WeatherFragment) getActivity()
+                            .getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
+                    fragment.drawerLayout.closeDrawers();
+                } else if(getActivity() instanceof AreaChooseActivity) {  // 宿主为AreaActivity，销毁该Activity
+                    getActivity().finish();
+                } else if (getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，通过R.id.fragment_container获取WeatherFragment，并关闭抽屉视图
+                    WeatherFragment fragment = (WeatherFragment) getActivity()
+                            .getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment.drawerLayout.closeDrawers();
                 }
+            } else if(mCurrentLevel == LEVEL_CITY) { // 当前选择为市，查询更新省列表
+                updateProvinces();
+            } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当前选择为地区，查询更新市列表
+                updateCities();
             }
         });
     }
@@ -313,9 +312,16 @@ public class AreaChooseFragment extends Fragment {
             } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当选中项为区，跳转到天气显示
                 String weatherId = mDistricts.get(position).getWeatherId();
                 if(getActivity() instanceof AreaChooseActivity) { // 宿主为AreaChooseActivity，启动MainActivity
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
+
+                    ManagedCity city = new ManagedCity();
+                    city.setCid(weatherId);
+                    city.setCityName(mDistricts.get(position).getDistrictName());
+                    city.save();
+
+                    /*Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("weather_id", weatherId);
-                    getActivity().startActivity(intent);
+                    getActivity().startActivity(intent);*/
+
                     getActivity().finish();
                 } else if(getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，关闭抽屉视图，请求并显示天气信息
                     WeatherFragment fragment = (WeatherFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
