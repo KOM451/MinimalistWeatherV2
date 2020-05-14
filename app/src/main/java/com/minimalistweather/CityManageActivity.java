@@ -32,6 +32,8 @@ public class CityManageActivity extends AppCompatActivity {
 
     private List<ManagedCity> mCities = new ArrayList<>();
 
+    private Button mAddCityButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,13 @@ public class CityManageActivity extends AppCompatActivity {
         mCities = LitePal.findAll(ManagedCity.class);
         mManagedCityAdapter = new ManagedCityAdapter(mCities);
         mCityManageLayout.setAdapter(mManagedCityAdapter);
+
+        mAddCityButton = (Button) findViewById(R.id.add_city);
+        mAddCityButton.setOnClickListener(view -> {
+            // 添加城市（存在bug，待修复。。。）
+            Intent intent = new Intent(CityManageActivity.this, AreaChooseActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void initToolbar() {
@@ -60,7 +69,7 @@ public class CityManageActivity extends AppCompatActivity {
 
         private List<ManagedCity> mCities;
 
-        public ManagedCityAdapter(List<ManagedCity> cities) {
+        ManagedCityAdapter(List<ManagedCity> cities) {
             mCities = cities;
         }
 
@@ -88,7 +97,7 @@ public class CityManageActivity extends AppCompatActivity {
 
         private TextView mCityNameText;
 
-        public ManagedCityHolder(LayoutInflater inflater, ViewGroup parent) {
+        ManagedCityHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_city_manage, parent, false));
             mCityNameText = (TextView) itemView.findViewById(R.id.manage_city_name);
             Button deleteCityButton = (Button) itemView.findViewById(R.id.delete_city);
@@ -107,7 +116,7 @@ public class CityManageActivity extends AppCompatActivity {
             });
         }
 
-        public void bind(ManagedCity city) {
+        void bind(ManagedCity city) {
             mCity = city;
             mCityNameText.setText(mCity.getCityName());
         }
