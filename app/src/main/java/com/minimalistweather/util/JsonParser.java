@@ -3,14 +3,14 @@ package com.minimalistweather.util;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
-import com.minimalistweather.database_entity.City;
-import com.minimalistweather.database_entity.District;
-import com.minimalistweather.database_entity.Province;
-import com.minimalistweather.gson_entity.HeWeatherAirQuality;
-import com.minimalistweather.gson_entity.HeWeatherForecast;
-import com.minimalistweather.gson_entity.HeWeatherLifestyle;
-import com.minimalistweather.gson_entity.HeWeatherNow;
-import com.minimalistweather.gson_entity.Location;
+import com.minimalistweather.entity.database_entity.City;
+import com.minimalistweather.entity.database_entity.District;
+import com.minimalistweather.entity.database_entity.Province;
+import com.minimalistweather.entity.gson_entity.HeWeatherAirQuality;
+import com.minimalistweather.entity.gson_entity.HeWeatherForecast;
+import com.minimalistweather.entity.gson_entity.HeWeatherLifestyle;
+import com.minimalistweather.entity.gson_entity.HeWeatherNow;
+import com.minimalistweather.entity.gson_entity.Location;
 
 import org.json.JSONArray;
 import org.json.JSONException;

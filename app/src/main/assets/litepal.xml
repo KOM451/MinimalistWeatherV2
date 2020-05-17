@@ -6,10 +6,10 @@
     <version value="2" />
 
     <list>
-        <mapping class="com.minimalistweather.database_entity.Province"/>
-        <mapping class="com.minimalistweather.database_entity.City"/>
-        <mapping class="com.minimalistweather.database_entity.District"/>
-        <mapping class="com.minimalistweather.database_entity.ManagedCity"/>
+        <mapping class="com.minimalistweather.entity.database_entity.Province"/>
+        <mapping class="com.minimalistweather.entity.database_entity.City"/>
+        <mapping class="com.minimalistweather.entity.database_entity.District"/>
+        <mapping class="com.minimalistweather.entity.database_entity.ManagedCity"/>
     </list>
 
     <!--
