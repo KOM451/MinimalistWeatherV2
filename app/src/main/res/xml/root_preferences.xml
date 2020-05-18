@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/setting_title">
+        <SwitchPreference
+            app:key="switch_location"
+            app:title="@string/switch_location"/>
+
+        <SwitchPreference
+            app:key="switch_notification"
+            app:title="@string/switch_notification"/>
+
+        <SwitchPreference
+            app:key="switch_regular_refresh"
+            app:title="@string/switch_regular_refresh"/>
+
+        <Preference
+            app:key="update_version"
+            app:title="@string/check_update"
+            app:summary="@string/current_version"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
