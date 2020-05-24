@@ -8,7 +8,21 @@ import android.util.Log;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.minimalistweather.entity.database_entity.ManagedCity;
+import com.minimalistweather.entity.gson_entity.Location;
 import com.minimalistweather.util.BaseConfigUtil;
+import com.minimalistweather.util.HttpUtil;
+import com.minimalistweather.util.JsonParser;
+import com.minimalistweather.view.activity.MainActivity;
+import com.minimalistweather.view.fragment.WeatherFragment;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class AMapLocationService extends Service {
 
@@ -22,6 +36,35 @@ public class AMapLocationService extends Service {
             if (aMapLocation.getErrorCode() == 0) {
                 // 解析定位信息
                 BaseConfigUtil.AD_CODE = aMapLocation.getAdCode();
+                String url = "https://search.heweather.net/find?location="
+                        + BaseConfigUtil.AD_CODE
+                        + "&key=1f973beb7602432bb31cdceb9da27525";
+                HttpUtil.sendHttpRequest(url, new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        String responseStr = response.body().string();
+                        Location location = JsonParser.parseLocation(responseStr);
+                        if (location != null && BaseConfigUtil.API_STATUS_OK.equals(location.status)) {
+                            String cid = location.basic.get(0).cid;
+                            String districtName = location.basic.get(0).location;
+                            ManagedCity city = new ManagedCity();
+                            city.setCid(cid);
+                            city.setCityName(districtName);
+                            city.save();
+                            BaseConfigUtil.CID = cid;
+
+                            final Intent intent = new Intent();
+                            intent.setAction(WeatherFragment.ACTION_UPDATE);
+                            intent.putExtra("weather_id", cid);
+                            sendBroadcast(intent);
+                        }
+                    }
+                });
                 Log.i(TAG, "当前地区编码：" + BaseConfigUtil.AD_CODE);
             } else {
                 String errContent = "定位失败，" + aMapLocation.getErrorCode() + ": " + aMapLocation.getErrorInfo();

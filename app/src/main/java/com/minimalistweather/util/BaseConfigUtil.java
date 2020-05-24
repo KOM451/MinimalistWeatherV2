@@ -11,6 +11,9 @@ public class BaseConfigUtil {
     // 区域编码，默认为北京市朝阳区
     public static String AD_CODE = "110105";
 
+    // 地区ID，默认为北京市朝阳区
+    public static String CID = "CN101010300";
+
     // 缓存数据 key
     public static final String PREFERENCE_WEATHER_NOW = "weather_now";
     public static final String PREFERENCE_WEATHER_FORECAST = "weather_forecast";

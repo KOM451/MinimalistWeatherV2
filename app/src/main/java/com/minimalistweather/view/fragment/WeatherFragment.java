@@ -1,9 +1,13 @@
 package com.minimalistweather.view.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +52,13 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class WeatherFragment extends Fragment {
+
+    private static final String TAG = "WeatherFragment";
+
+
+    public static final String ACTION_UPDATE = "action.update";
+
+    public LocationChangeReceiver mReceiver;
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
 
@@ -130,6 +141,11 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_UPDATE);
+        mReceiver = new LocationChangeReceiver();
+        getActivity().registerReceiver(mReceiver, filter);
+
         if(currentWeatherId != null) {
             requestWeatherNow(currentWeatherId);
             requestWeatherAirQuality(currentWeatherId);
@@ -179,10 +195,11 @@ public class WeatherFragment extends Fragment {
         super.onResume();
         String weatherId = getActivity().getIntent().getStringExtra("weather_id");
         if(weatherId != null) {
-            requestWeatherNow(currentWeatherId);
-            requestWeatherAirQuality(currentWeatherId);
-            requestWeatherForecast(currentWeatherId);
-            requestWeatherLifestyle(currentWeatherId);
+            requestWeatherNow(weatherId);
+            requestWeatherAirQuality(weatherId);
+            requestWeatherForecast(weatherId);
+            requestWeatherLifestyle(weatherId);
+            currentWeatherId = weatherId;
         }
     }
 
@@ -469,5 +486,21 @@ public class WeatherFragment extends Fragment {
         mCondIcon.setImageResource(iconCode);
 
         mWeatherLayout.setVisibility(View.VISIBLE);
+    }
+
+    private class LocationChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "当前的weatherId = " + intent.getStringExtra("weather_id"));
+            String weatherId = intent.getStringExtra("weather_id");
+            if(weatherId != null) {
+                requestWeatherNow(weatherId);
+                requestWeatherAirQuality(weatherId);
+                requestWeatherForecast(weatherId);
+                requestWeatherLifestyle(weatherId);
+                currentWeatherId = weatherId;
+            }
+        }
     }
 }

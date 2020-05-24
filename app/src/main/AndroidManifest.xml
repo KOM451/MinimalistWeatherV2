@@ -24,7 +24,9 @@
         <service
             android:name=".service.AMapLocationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+
+        </service>
         <service
             android:name=".service.RegularRefreshService"
             android:enabled="true"
