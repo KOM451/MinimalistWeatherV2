@@ -22,9 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".service.RegularRefreshService"
+            android:name=".service.AMapLocationService"
             android:enabled="true"
             android:exported="true"></service>
+        <service
+            android:name=".service.RegularRefreshService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".view.activity.SettingsActivity"

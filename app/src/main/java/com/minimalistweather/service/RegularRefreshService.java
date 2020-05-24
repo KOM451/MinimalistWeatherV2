@@ -21,7 +21,7 @@ public class RegularRefreshService extends Service {
     }
 
     public void updateWeather() { // 待完善
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
     }
 
     @Override

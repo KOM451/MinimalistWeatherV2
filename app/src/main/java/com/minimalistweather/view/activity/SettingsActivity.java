@@ -1,21 +1,29 @@
 package com.minimalistweather.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.minimalistweather.R;
+import com.minimalistweather.service.AMapLocationService;
 
 import org.jetbrains.annotations.NotNull;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    private static final String TAG = "SettingsActivity";
 
     private Toolbar mToolbar;
     private AppCompatDelegate mDelegate;
@@ -67,10 +75,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private Preference mCheckUpdate;
+        private SwitchPreference mSwitchLocation;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            initLocationService();
             initCheckUpdate();
         }
 
@@ -79,6 +89,24 @@ public class SettingsActivity extends AppCompatActivity {
             assert mCheckUpdate != null;
             mCheckUpdate.setOnPreferenceClickListener(preference -> {
                 Toast.makeText(getActivity(), "当前已经市最新版本", Toast.LENGTH_SHORT).show();
+                return false;
+            });
+        }
+
+        private void initLocationService() {
+            mSwitchLocation = findPreference("switch_location");
+            mSwitchLocation.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean checkStatus = (boolean)newValue;
+                mSwitchLocation.setChecked(checkStatus);
+                Context context = getActivity();
+                Intent intentLocationService = new Intent(context, AMapLocationService.class);
+                if (checkStatus) {
+                    // 开启定位服务
+                    context.startService(intentLocationService);
+                } else {
+                    // 关闭定位服务
+                    context.stopService(intentLocationService);
+                }
                 return false;
             });
         }

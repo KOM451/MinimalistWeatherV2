@@ -20,7 +20,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
@@ -223,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 if (aMapLocation.getErrorCode() == 0) {
                   String adCode = aMapLocation.getAdCode(); // 获取区域编码
                   if (!TextUtils.isEmpty(adCode)) {
+                    BaseConfigUtil.AD_CODE = adCode;
                     loadWeatherByAdCode(adCode);
                   }
                 } else {
@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                   Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
                   // 定位失败显示北京朝阳区
                   String adCode = "110105";
+                  BaseConfigUtil.AD_CODE = adCode;
                   loadWeatherByAdCode(adCode);
                 }
                 mLocationClient.stopLocation(); // 停止定位
