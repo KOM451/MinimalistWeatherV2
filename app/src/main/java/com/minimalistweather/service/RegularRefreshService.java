@@ -34,26 +34,31 @@ public class RegularRefreshService extends Service {
 
     private static final String TAG = "RegularRefreshService";
 
+    AlarmManager mAlarmManager;
+
+    PendingIntent mPendingIntent;
+
     public RegularRefreshService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "定时刷新服务开启");
+        Log.i(TAG, "定时刷新服务启动");
         updateWeather();
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         int refreshInterval = 1000 * 10; // 自动刷新时间间隔
         long refreshTime = SystemClock.elapsedRealtime() + refreshInterval;
         Intent intentService = new Intent(this, RegularRefreshService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intentService, 0);
-        alarmManager.cancel(pendingIntent);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, refreshTime, pendingIntent);
+        mPendingIntent = PendingIntent.getService(this, 0, intentService, 0);
+        mAlarmManager.cancel(mPendingIntent);
+        mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, refreshTime, mPendingIntent);
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mAlarmManager.cancel(mPendingIntent);
         Log.i(TAG, "定时刷新任务销毁");
     }
 
