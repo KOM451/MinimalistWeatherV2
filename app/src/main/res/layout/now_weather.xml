@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="30dp"
-                tools:text="良"
+                android:text="NaN"
                 android:textColor="#03A9F4"
                 android:textSize="17sp"/>
 

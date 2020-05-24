@@ -46,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
     @NotNull
     public AppCompatDelegate getDelegate() {
         if (mDelegate == null) {

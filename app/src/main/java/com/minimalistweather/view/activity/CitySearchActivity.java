@@ -18,6 +18,7 @@ import com.minimalistweather.adapter.CitySearchAdapter;
 import com.minimalistweather.entity.CitySearchEntity;
 import com.minimalistweather.entity.gson_entity.Basic;
 import com.minimalistweather.entity.gson_entity.Location;
+import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
 
@@ -99,7 +100,7 @@ public class CitySearchActivity extends AppCompatActivity implements View.OnClic
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(locations != null && locations.status.equals("ok")) {
+                        if(locations != null && BaseConfigUtil.API_STATUS_OK.equals(locations.status)) {
                             final List<Basic> basic = locations.basic;
                             List<CitySearchEntity> data = new ArrayList<>();
                             if(basic != null && basic.size() > 0) {

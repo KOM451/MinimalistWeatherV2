@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.view.activity.CitySearchActivity;
 import com.minimalistweather.R;
 import com.minimalistweather.entity.CitySearchEntity;
@@ -135,7 +136,7 @@ public class CitySearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 String responseStr = response.body().string();
                 Location search = JsonParser.parseLocation(responseStr);
                 List<CitySearchEntity> citySearchEntities = new ArrayList<>();
-                if(search != null && search.status.equals("ok")) {
+                if(search != null && BaseConfigUtil.API_STATUS_OK.equals(search.status)) {
                     List<Basic> basic = search.basic;
                     Basic basicData = basic.get(0);
                     String parentCity = basicData.parent_city;

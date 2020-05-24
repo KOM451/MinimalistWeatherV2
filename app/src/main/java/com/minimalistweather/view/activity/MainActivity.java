@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             String responseStr = response.body().string();
             Location location = JsonParser.parseLocation(responseStr);
             if (location != null
-                && BaseConfigUtil.HE_WEATHER_API_STATUS_OK.equals(location.status)) {
+                && BaseConfigUtil.API_STATUS_OK.equals(location.status)) {
               mWeatherId = location.basic.get(0).cid;
               WeatherFragment weatherFragment = new WeatherFragment();
               Bundle bundle = new Bundle();

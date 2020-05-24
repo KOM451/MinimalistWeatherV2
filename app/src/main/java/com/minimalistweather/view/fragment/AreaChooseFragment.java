@@ -41,7 +41,7 @@ import okhttp3.Response;
 public class AreaChooseFragment extends Fragment {
 
     // 城市数据接口
-    public static final String baseAreaUrl = "http://guolin.tech/api/china/";
+    public static final String BASE_AREA_URL = "http://guolin.tech/api/china/";
 
     /**
      * 定义地区查询类型
@@ -154,7 +154,7 @@ public class AreaChooseFragment extends Fragment {
             mRecyclerView.smoothScrollToPosition(0);
             mCurrentLevel = LEVEL_PROVINCE;
         } else {
-            queryAreaFromServer(baseAreaUrl, TYPE_PROVINCE);
+            queryAreaFromServer(BASE_AREA_URL, TYPE_PROVINCE);
         }
     }
 
@@ -174,7 +174,7 @@ public class AreaChooseFragment extends Fragment {
             mCurrentLevel = LEVEL_CITY;
         } else {
             int provinceCode = mSelectedProvince.getProvinceCode();
-            String url = baseAreaUrl + provinceCode;
+            String url = BASE_AREA_URL + provinceCode;
             queryAreaFromServer(url, TYPE_CITY);
         }
     }
@@ -196,7 +196,7 @@ public class AreaChooseFragment extends Fragment {
         } else {
             int provinceCode = mSelectedProvince.getProvinceCode();
             int cityCode = mSelectedCity.getCityCode();
-            String url = baseAreaUrl + provinceCode + "/" + cityCode;
+            String url = BASE_AREA_URL + provinceCode + "/" + cityCode;
             queryAreaFromServer(url, TYPE_DISTRICT);
         }
     }

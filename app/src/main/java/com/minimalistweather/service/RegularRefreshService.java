@@ -80,7 +80,7 @@ public class RegularRefreshService extends Service {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     final String responseStr = response.body().string();
                     final HeWeatherNow heWeatherNow = JsonParser.parseWeatherNowResponse(responseStr);
-                    if (heWeatherNow != null && BaseConfigUtil.HE_WEATHER_API_STATUS_OK.equals(heWeatherNow.status)) {
+                    if (heWeatherNow != null && BaseConfigUtil.API_STATUS_OK.equals(heWeatherNow.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(RegularRefreshService.this).edit();
                         editor.putString("weather_now", responseStr);
                         editor.apply();
@@ -100,7 +100,7 @@ public class RegularRefreshService extends Service {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     final String responseStr = response.body().string();
                     final HeWeatherForecast heWeatherForecast = JsonParser.parseWeatherForecastResponse(responseStr);
-                    if (heWeatherForecast != null && BaseConfigUtil.HE_WEATHER_API_STATUS_OK.equals(heWeatherForecast.status)) {
+                    if (heWeatherForecast != null && BaseConfigUtil.API_STATUS_OK.equals(heWeatherForecast.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(RegularRefreshService.this).edit();
                         editor.putString("weather_forecast", responseStr);
                         editor.apply();
@@ -120,7 +120,7 @@ public class RegularRefreshService extends Service {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     final String responseStr = response.body().string();
                     final HeWeatherAirQuality heWeatherAirQuality = JsonParser.parseWeatherAirQuality(responseStr);
-                    if (heWeatherAirQuality != null && BaseConfigUtil.HE_WEATHER_API_STATUS_OK.equals(heWeatherAirQuality.status)) {
+                    if (heWeatherAirQuality != null && BaseConfigUtil.API_STATUS_OK.equals(heWeatherAirQuality.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(RegularRefreshService.this).edit();
                         editor.putString("weather_air_quality", responseStr);
                         editor.apply();
@@ -140,7 +140,7 @@ public class RegularRefreshService extends Service {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     final String responseStr = response.body().string();
                     final HeWeatherLifestyle heWeatherLifestyle = JsonParser.parseWeatherLifestyleResponse(responseStr);
-                    if (heWeatherLifestyle != null && BaseConfigUtil.HE_WEATHER_API_STATUS_OK.equals(heWeatherLifestyle.status)) {
+                    if (heWeatherLifestyle != null && BaseConfigUtil.API_STATUS_OK.equals(heWeatherLifestyle.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(RegularRefreshService.this).edit();
                         editor.putString("weather_lifestyle", responseStr);
                         editor.apply();
