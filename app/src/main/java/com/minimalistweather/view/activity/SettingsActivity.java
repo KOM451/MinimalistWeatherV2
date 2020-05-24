@@ -18,6 +18,7 @@ import androidx.preference.SwitchPreference;
 
 import com.minimalistweather.R;
 import com.minimalistweather.service.AMapLocationService;
+import com.minimalistweather.service.RegularRefreshService;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,11 +77,13 @@ public class SettingsActivity extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private Preference mCheckUpdate;
         private SwitchPreference mSwitchLocation;
+        private SwitchPreference mSwitchRegularRefresh;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             initLocationService();
+            initRegularRefreshService();
             initCheckUpdate();
         }
 
@@ -106,6 +109,24 @@ public class SettingsActivity extends AppCompatActivity {
                 } else {
                     // 关闭定位服务
                     context.stopService(intentLocationService);
+                }
+                return false;
+            });
+        }
+
+        private void initRegularRefreshService() {
+            mSwitchRegularRefresh = findPreference("switch_regular_refresh");
+            mSwitchRegularRefresh.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean checkStatus = (boolean) newValue;
+                mSwitchRegularRefresh.setChecked(checkStatus);
+                Context context = getActivity();
+                Intent intentRegularRefreshService = new Intent(context, RegularRefreshService.class);
+                if (checkStatus) {
+                    // 开启定时刷新服务
+                    context.startService(intentRegularRefreshService);
+                } else {
+                    // 关闭定时刷新服务
+                    context.stopService(intentRegularRefreshService);
                 }
                 return false;
             });
