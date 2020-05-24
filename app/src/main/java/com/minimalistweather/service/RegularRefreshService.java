@@ -20,7 +20,7 @@ public class RegularRefreshService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void updateWeather() {
+    public void updateWeather() { // 待完善
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 

@@ -33,7 +33,6 @@ import org.litepal.LitePal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -212,7 +211,7 @@ public class AreaChooseFragment extends Fragment {
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         closeProgress();
@@ -237,7 +236,7 @@ public class AreaChooseFragment extends Fragment {
                 }
                 if(isParseSuccess) {
                     // 如果解析成功，切换到主线程，更新数据
-                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                    requireActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             closeProgress();

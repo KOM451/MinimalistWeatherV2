@@ -26,6 +26,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.google.android.material.navigation.NavigationView;
 import com.minimalistweather.R;
+import com.minimalistweather.entity.database_entity.ManagedCity;
 import com.minimalistweather.entity.gson_entity.Location;
 import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
@@ -43,6 +44,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+  public static final String TAG = "MainActivity";
 
   /** 定位相关 */
   public AMapLocationClient mLocationClient = null; // 声明定位客户端
@@ -181,12 +184,7 @@ public class MainActivity extends AppCompatActivity {
           @Override
           public void onFailure(@NotNull Call call, @NotNull IOException e) {
             runOnUiThread(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    Toast.makeText(MainActivity.this, "城市ID查询失败", Toast.LENGTH_SHORT).show();
-                  }
-                });
+                    () -> Toast.makeText(MainActivity.this, "城市ID查询失败", Toast.LENGTH_SHORT).show());
           }
 
           @Override
@@ -204,6 +202,14 @@ public class MainActivity extends AppCompatActivity {
               mFragmentManager = getSupportFragmentManager();
               FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
               fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
+
+              // 定位成功，将定位的城市信息加入城市管理列表
+              String cid = location.basic.get(0).cid;
+              String districtName = location.basic.get(0).location;
+              ManagedCity city = new ManagedCity();
+              city.setCid(cid);
+              city.setCityName(districtName);
+              city.save();
             }
           }
         });
@@ -212,32 +218,29 @@ public class MainActivity extends AppCompatActivity {
   /** 初始化监听器，获取定位的城市 */
   private void initLocationListener() {
     mLocationListener =
-        new AMapLocationListener() {
-          @Override
-          public void onLocationChanged(AMapLocation aMapLocation) {
-            if (aMapLocation != null) {
-              if (aMapLocation.getErrorCode() == 0) {
-                String adCode = aMapLocation.getAdCode(); // 获取区域编码
-                if (!TextUtils.isEmpty(adCode)) {
+            aMapLocation -> {
+              if (aMapLocation != null) {
+                if (aMapLocation.getErrorCode() == 0) {
+                  String adCode = aMapLocation.getAdCode(); // 获取区域编码
+                  if (!TextUtils.isEmpty(adCode)) {
+                    loadWeatherByAdCode(adCode);
+                  }
+                } else {
+                  Log.e(
+                      "AmapError",
+                      "location Error, ErrCode:"
+                          + aMapLocation.getErrorCode()
+                          + ", errInfo:"
+                          + aMapLocation.getErrorInfo());
+                  Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
+                  // 定位失败显示北京朝阳区
+                  String adCode = "110105";
                   loadWeatherByAdCode(adCode);
                 }
-              } else {
-                Log.e(
-                    "AmapError",
-                    "location Error, ErrCode:"
-                        + aMapLocation.getErrorCode()
-                        + ", errInfo:"
-                        + aMapLocation.getErrorInfo());
-                Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
-                // 定位失败显示北京朝阳区
-                String adCode = "110105";
-                loadWeatherByAdCode(adCode);
+                mLocationClient.stopLocation(); // 停止定位
+                mLocationClient.onDestroy(); // 销毁定位客户端
               }
-              mLocationClient.stopLocation(); // 停止定位
-              mLocationClient.onDestroy(); // 销毁定位客户端
-            }
-          }
-        };
+            };
   }
 
   /** 初始化定位 */
