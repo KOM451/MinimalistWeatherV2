@@ -58,7 +58,11 @@ public class WeatherFragment extends Fragment {
 
     public static final String ACTION_UPDATE = "action.update";
 
-    public LocationChangeReceiver mReceiver;
+    public LocationChangeReceiver mLocationChangeReceiver;
+
+    public static final String ACTION_REFRESH = "action.refresh";
+
+    public AutoRefreshReceiver mAutoRefreshReceiver;
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
 
@@ -141,10 +145,15 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_UPDATE);
-        mReceiver = new LocationChangeReceiver();
-        getActivity().registerReceiver(mReceiver, filter);
+        IntentFilter filterLocation = new IntentFilter();
+        filterLocation.addAction(ACTION_UPDATE);
+        mLocationChangeReceiver = new LocationChangeReceiver();
+        getActivity().registerReceiver(mLocationChangeReceiver, filterLocation);
+
+        IntentFilter filterRefresh = new IntentFilter();
+        filterRefresh.addAction(ACTION_REFRESH);
+        mAutoRefreshReceiver = new AutoRefreshReceiver();
+        getActivity().registerReceiver(mAutoRefreshReceiver, filterRefresh);
 
         if(currentWeatherId != null) {
             requestWeatherNow(currentWeatherId);
@@ -488,11 +497,29 @@ public class WeatherFragment extends Fragment {
         mWeatherLayout.setVisibility(View.VISIBLE);
     }
 
+    // 接收定位服务传输的数据
     private class LocationChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "当前的weatherId = " + intent.getStringExtra("weather_id"));
+            String weatherId = intent.getStringExtra("weather_id");
+            if(weatherId != null) {
+                requestWeatherNow(weatherId);
+                requestWeatherAirQuality(weatherId);
+                requestWeatherForecast(weatherId);
+                requestWeatherLifestyle(weatherId);
+                currentWeatherId = weatherId;
+            }
+        }
+    }
+
+    // 接收定时刷新服务传输额数据
+    private class AutoRefreshReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "当前刷新的weatherId = " + intent.getStringExtra("weather_id"));
             String weatherId = intent.getStringExtra("weather_id");
             if(weatherId != null) {
                 requestWeatherNow(weatherId);

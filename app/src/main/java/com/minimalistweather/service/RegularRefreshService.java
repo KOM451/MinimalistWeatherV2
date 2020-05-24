@@ -18,6 +18,7 @@ import com.minimalistweather.entity.gson_entity.HeWeatherNow;
 import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
+import com.minimalistweather.view.fragment.WeatherFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,6 +69,12 @@ public class RegularRefreshService extends Service {
         if (weatherNow != null) {
             HeWeatherNow heWeatherNow = JsonParser.parseWeatherNowResponse(weatherNow);
             String weatherId = heWeatherNow.basic.cid;
+
+            final Intent intent = new Intent();
+            intent.setAction(WeatherFragment.ACTION_REFRESH);
+            intent.putExtra("weather_id", weatherId);
+            sendBroadcast(intent);
+
             // 刷新实况天气数据
             String weatherNowUrl = "https://free-api.heweather.net/s6/weather/now?location=" + weatherId + "&key=1f973beb7602432bb31cdceb9da27525";
             HttpUtil.sendHttpRequest(weatherNowUrl, new Callback() {
