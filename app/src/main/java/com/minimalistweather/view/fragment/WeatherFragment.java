@@ -145,11 +145,13 @@ public class WeatherFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // 动态注册广播接收器，用于接收定位服务推送的数据
         IntentFilter filterLocation = new IntentFilter();
         filterLocation.addAction(ACTION_UPDATE);
         mLocationChangeReceiver = new LocationChangeReceiver();
         getActivity().registerReceiver(mLocationChangeReceiver, filterLocation);
 
+        // 动态注册广播接收器，用于接收定时刷新服务推送的数据
         IntentFilter filterRefresh = new IntentFilter();
         filterRefresh.addAction(ACTION_REFRESH);
         mAutoRefreshReceiver = new AutoRefreshReceiver();
