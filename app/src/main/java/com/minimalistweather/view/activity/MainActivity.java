@@ -205,6 +205,9 @@ public class MainActivity extends AppCompatActivity {
               FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
               fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
 
+              // 得到父级城市
+              BaseConfigUtil.PARENT_CITY = location.basic.get(0).parent_city;
+
               // 定位成功，将定位的城市信息加入城市管理列表
               String cid = location.basic.get(0).cid;
               String districtName = location.basic.get(0).location;

@@ -14,6 +14,9 @@ public class BaseConfigUtil {
     // 地区ID，默认为北京市朝阳区
     public static String CID = "CN101010300";
 
+    // 上一级城市
+    public static String PARENT_CITY = "北京";
+
     // 缓存数据 key
     public static final String PREFERENCE_WEATHER_NOW = "weather_now";
     public static final String PREFERENCE_WEATHER_FORECAST = "weather_forecast";

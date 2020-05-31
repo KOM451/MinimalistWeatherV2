@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ddd"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="#ddd">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -28,8 +28,6 @@
                     android:layout_height="wrap_content"
                     android:fitsSystemWindows="true">
 
-                    <!--头部-->
-                    <!--<include layout="@layout/title_weather"/>-->
                     <!--实况天气-->
                     <include layout="@layout/now_weather"/>
                     <!--天气预报-->
@@ -44,12 +42,6 @@
             </ScrollView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-<!--        <FrameLayout
-            android:id="@+id/air_quality_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"/>-->
 
         <FrameLayout
             android:id="@+id/choose_area_fragment"

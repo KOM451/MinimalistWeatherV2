@@ -25,3 +25,11 @@
 -keep class com.amap.api.fence.**{*;}
 -keep class com.loc.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
+
+-dontwarn com.squareup.**
+-dontwarn okio.**
+-keep public class org.codehaus.* { *; }
+-keep public class java.nio.* { *; }
+
+-keep public class com.heweather.plugin.bean.** { *; }
+-keep public class com.heweather.plugin.view.** { *; }

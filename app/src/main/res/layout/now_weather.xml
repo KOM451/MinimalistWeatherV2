@@ -84,15 +84,6 @@
                 android:textColor="#03A9F4"
                 android:textSize="17sp"/>
 
-            <!--箭头-->
-<!--            <TextView
-                android:id="@+id/show_air_quality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=">"
-                android:textColor="#03A9F4"
-                android:textSize="20sp"/>-->
-
         </LinearLayout>
         
         <RelativeLayout
