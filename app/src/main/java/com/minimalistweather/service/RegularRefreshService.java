@@ -11,22 +11,9 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
-import com.minimalistweather.entity.gson_entity.HeWeatherAirQuality;
-import com.minimalistweather.entity.gson_entity.HeWeatherForecast;
-import com.minimalistweather.entity.gson_entity.HeWeatherLifestyle;
 import com.minimalistweather.entity.gson_entity.HeWeatherNow;
-import com.minimalistweather.util.BaseConfigUtil;
-import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
 import com.minimalistweather.view.fragment.WeatherFragment;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * 定时刷新数据服务

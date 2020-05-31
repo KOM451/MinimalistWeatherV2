@@ -13,7 +13,6 @@ import com.minimalistweather.entity.gson_entity.Location;
 import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
-import com.minimalistweather.view.activity.MainActivity;
 import com.minimalistweather.view.fragment.WeatherFragment;
 
 import org.jetbrains.annotations.NotNull;

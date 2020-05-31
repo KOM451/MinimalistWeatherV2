@@ -454,7 +454,8 @@ public class WeatherFragment extends Fragment {
             /*
              * 动态获取天气图标
              */
-            String iconName = "he" + forecast.cond_code_d;
+            //String iconName = "he" + forecast.cond_code_d;
+            String iconName = "icon_" + forecast.cond_code_d + "d"; // 白天图标
             int iconId = getResources().getIdentifier(iconName, "drawable", "com.minimalistweather");
             weatherForecastCondIcon.setImageResource(iconId);
 
@@ -492,7 +493,8 @@ public class WeatherFragment extends Fragment {
         /*
          * 动态获取实况天气图标
          */
-        String iconName = "he" + weatherNow.now.cond_code;
+        //String iconName = "he" + weatherNow.now.cond_code;
+        String iconName = "icon_" + weatherNow.now.cond_code + "d"; // 白天图标
         int iconCode = getResources().getIdentifier(iconName, "drawable", "com.minimalistweather");
         mCondIcon.setImageResource(iconCode);
 

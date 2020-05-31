@@ -170,7 +170,6 @@ public class CitySearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     CitySearchListEntity citySearchListEntity = new CitySearchListEntity();
                     citySearchListEntity.setCitySearchEntities(citySearchEntities);
                     SpUtils.saveBean(mCitySearchActivity, key, citySearchListEntity);
-                    // TODO: DataUtil
                 }
             }
         });
