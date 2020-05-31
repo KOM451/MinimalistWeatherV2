@@ -223,7 +223,7 @@ public class WeatherFragment extends Fragment {
      * @param weatherId
      */
     public void requestWeatherLifestyle(final String weatherId) {
-        String url = "https://free-api.heweather.net/s6/weather/lifestyle?location=" +weatherId+ "&key=1f973beb7602432bb31cdceb9da27525";
+        String url = "https://free-api.heweather.net/s6/weather/lifestyle?location=" +weatherId+ "&key=" + BaseConfigUtil.API_KEY;
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -262,7 +262,7 @@ public class WeatherFragment extends Fragment {
      * 请求实况空气质量数据
      */
     public void requestWeatherAirQuality(String weatherId) {
-        String url = "https://free-api.heweather.net/s6/air/now?location=" + weatherId +"&key=1f973beb7602432bb31cdceb9da27525";
+        String url = "https://free-api.heweather.net/s6/air/now?location=" + weatherId +"&key=" + BaseConfigUtil.API_KEY;
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -301,7 +301,7 @@ public class WeatherFragment extends Fragment {
      * @param weatherId
      */
     public void requestWeatherForecast(final String weatherId) {
-        String url = "https://free-api.heweather.net/s6/weather/forecast?location=" + weatherId + "&key=1f973beb7602432bb31cdceb9da27525";
+        String url = "https://free-api.heweather.net/s6/weather/forecast?location=" + weatherId + "&key=" + BaseConfigUtil.API_KEY;
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -340,7 +340,7 @@ public class WeatherFragment extends Fragment {
      * @param weatherId
      */
     public void requestWeatherNow(final String weatherId) {
-        String url = "https://free-api.heweather.net/s6/weather/now?location=" + weatherId + "&key=1f973beb7602432bb31cdceb9da27525";
+        String url = "https://free-api.heweather.net/s6/weather/now?location=" + weatherId + "&key=" + BaseConfigUtil.API_KEY;
         HttpUtil.sendHttpRequest(url, new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {

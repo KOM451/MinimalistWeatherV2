@@ -36,6 +36,7 @@ import com.minimalistweather.util.JsonParser;
 import com.minimalistweather.view.fragment.WeatherFragment;
 
 import org.jetbrains.annotations.NotNull;
+import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -211,10 +212,12 @@ public class MainActivity extends AppCompatActivity {
               // 定位成功，将定位的城市信息加入城市管理列表
               String cid = location.basic.get(0).cid;
               String districtName = location.basic.get(0).location;
-              ManagedCity city = new ManagedCity();
-              city.setCid(cid);
-              city.setCityName(districtName);
-              city.save();
+              if (LitePal.where("cid = ?", String.valueOf(cid)).find(ManagedCity.class) == null) {
+                ManagedCity city = new ManagedCity();
+                city.setCid(cid);
+                city.setCityName(districtName);
+                city.save();
+              }
             }
           }
         });

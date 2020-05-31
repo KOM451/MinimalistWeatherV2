@@ -6,7 +6,7 @@ public class BaseConfigUtil {
     public static final String API_STATUS_OK = "ok";
 
     // 和风天气 WebAPI 用户 key
-    public static final String API_KEY = "&key=1f973beb7602432bb31cdceb9da27525";
+    public static final String API_KEY = "b630c64a4e7b496bbcc522d99e62c756";
 
     // 区域编码，默认为北京市朝阳区
     public static String AD_CODE = "110105";
