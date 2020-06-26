@@ -8,11 +8,238 @@
     android:layout_margin="@dimen/cardview_margin"
     card_view:cardElevation="5dp"
     card_view:cardCornerRadius="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:clickable="true">
 
+    <!--    &lt;!&ndash;相对布局&ndash;&gt;-->
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+    <!--    &lt;!&ndash;透明度为0.3的黑色背景&ndash;&gt;-->
+    <!--    <LinearLayout-->
+    <!--        android:background="#000"-->
+    <!--        android:alpha="0.3"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"/>&lt;!&ndash;空气质量&ndash;&gt;-->
+    <!--        <LinearLayout-->
+    <!--            android:padding="20dp"-->
+    <!--            android:orientation="vertical"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+    <!--            &lt;!&ndash;标题&ndash;&gt;-->
+    <!--            <TextView-->
+    <!--                android:textSize="18sp"-->
+    <!--                android:textColor="@color/white"-->
+    <!--                android:text="空气质量"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"/>-->
+
+    <!--            <LinearLayout-->
+    <!--                android:padding="8dp"-->
+    <!--                android:orientation="horizontal"-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="wrap_content">-->
+    <!--                &lt;!&ndash;污染指数 动画展示&ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:orientation="vertical"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:layout_weight="1">-->
+    <!--                    <TextView-->
+    <!--                        android:layout_marginBottom="8dp"-->
+    <!--                        android:textSize="14sp"-->
+    <!--                        android:textColor="#DAEBEE"-->
+    <!--                        android:text="污染指数"-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"/>-->
+    <!--                    &lt;!&ndash;显示污染指数进度值&ndash;&gt;-->
+    <!--                    <com.minimalistweather.view.RoundProgressBar-->
+    <!--                        android:id="@+id/rpb_aqi"-->
+    <!--                        app:round_bg_color="#C6D7F4"-->
+    <!--                        app:round_progress_color="#FBFEF7"-->
+    <!--                        android:layout_gravity="center"-->
+    <!--                        android:layout_width="120dp"-->
+    <!--                        android:layout_height="120dp"/>-->
+    <!--                </LinearLayout>-->
+    <!--                &lt;!&ndash;其他指数&ndash;&gt;-->
+    <!--                <LinearLayout-->
+    <!--                    android:orientation="vertical"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_weight="1">-->
+    <!--                    &lt;!&ndash;PM10&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:textColor="@color/blue_one"-->
+    <!--                            android:text="PM10"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_pm10"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+
+    <!--                    &lt;!&ndash;PM2.5&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_marginTop="12dp"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:textColor="@color/blue_one"-->
+    <!--                            android:text="PM2.5"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_pm25"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+
+    <!--                    &lt;!&ndash;NO2 二氧化氮&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_marginTop="12dp"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <LinearLayout-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_weight="1">-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="NO"-->
+    <!--                                android:textSize="12sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="2"-->
+    <!--                                android:textSize="8sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                        </LinearLayout>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_no2"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+
+    <!--                    &lt;!&ndash;SO2 二氧化硫&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_marginTop="12dp"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <LinearLayout-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_weight="1">-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="SO"-->
+    <!--                                android:textSize="12sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="2"-->
+    <!--                                android:textSize="8sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                        </LinearLayout>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_so2"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+
+    <!--                    &lt;!&ndash;O3 臭氧&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_marginTop="12dp"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <LinearLayout-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_weight="1">-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="O"-->
+    <!--                                android:textSize="12sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                            <TextView-->
+    <!--                                android:textColor="@color/blue_one"-->
+    <!--                                android:text="3"-->
+    <!--                                android:textSize="8sp"-->
+    <!--                                android:layout_width="wrap_content"-->
+    <!--                                android:layout_height="wrap_content"/>-->
+    <!--                        </LinearLayout>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_o3"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+
+    <!--                    &lt;!&ndash;CO 一氧化碳&ndash;&gt;-->
+    <!--                    <LinearLayout-->
+    <!--                        android:layout_marginTop="12dp"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content">-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:textColor="@color/blue_one"-->
+    <!--                            android:text="CO"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                        <TextView-->
+    <!--                            android:gravity="center"-->
+    <!--                            android:id="@+id/tv_co"-->
+    <!--                            android:textColor="@color/white"-->
+    <!--                            android:textSize="12sp"-->
+    <!--                            android:layout_width="0dp"-->
+    <!--                            android:layout_weight="1"-->
+    <!--                            android:layout_height="wrap_content"/>-->
+    <!--                    </LinearLayout>-->
+    <!--                </LinearLayout>-->
+    <!--            </LinearLayout>-->
+    <!--        </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:baselineAligned="false"
         android:gravity="center_vertical"
         android:paddingBottom="16dp"
@@ -21,6 +248,24 @@
         android:paddingTop="16dp"
         android:orientation="horizontal">
         <!--风力风向-->
+        <RelativeLayout
+            android:id="@+id/rl_wind"
+            android:layout_width="130dp"
+            android:layout_height="120dp">
+            <!--大风车-->
+            <com.minimalistweather.view.WhiteWindmills
+                android:id="@+id/ww_big"
+                android:layout_width="100dp"
+                android:layout_height="120dp" />
+            <!--小风车-->
+            <com.minimalistweather.view.WhiteWindmills
+                android:id="@+id/ww_small"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -136,4 +381,5 @@
 
 
 
+    <!--</RelativeLayout>-->
 </androidx.cardview.widget.CardView>

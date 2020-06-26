@@ -9,18 +9,23 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocationClient;
@@ -31,6 +36,7 @@ import com.minimalistweather.R;
 import com.minimalistweather.entity.database_entity.ManagedCity;
 import com.minimalistweather.entity.gson_entity.Location;
 import com.minimalistweather.util.BaseConfigUtil;
+import com.minimalistweather.util.ExampleUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
 import com.minimalistweather.view.fragment.WeatherFragment;
@@ -42,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -61,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
   private FragmentManager mFragmentManager;
   private String mWeatherId;
 
+  // for receive customer msg from jpush server
+  private MessageReceiver mMessageReceiver;
+  public static final String MESSAGE_RECEIVED_ACTION =
+      "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
+  public static final String KEY_TITLE = "title";
+  public static final String KEY_MESSAGE = "message";
+  public static final String KEY_EXTRAS = "extras";
+  private EditText msgText;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
     initNavigation();
     initToolBar();
 
+    JPushInterface.init(getApplicationContext()); // 极光接口初始化，否则用不了
+    registerMessageReceiver(); // 注册消息接收器
     /*
      * 动态申请定位所需要的权限
      */
@@ -172,22 +190,16 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * 根据AdCode（区域编码）查询城市ID，并加载城市
-   *
+   * 根据AdCode（区域编码）查询城市ID，并加载城市（编码转换）
    * @return
    */
   private void loadWeatherByAdCode(String adCode) {
-    String findLocationUrl =
-        "https://search.heweather.net/find?location="
-            + adCode
-            + "&key=1f973beb7602432bb31cdceb9da27525";
-    HttpUtil.sendHttpRequest(
-        findLocationUrl,
-        new Callback() {
+    String findLocationUrl = "https://search.heweather.net/find?location=" + adCode + "&key=1f973beb7602432bb31cdceb9da27525";
+    HttpUtil.sendHttpRequest(findLocationUrl, new Callback() {
           @Override
           public void onFailure(@NotNull Call call, @NotNull IOException e) {
             runOnUiThread(
-                    () -> Toast.makeText(MainActivity.this, "城市ID查询失败", Toast.LENGTH_SHORT).show());
+                () -> Toast.makeText(MainActivity.this, "城市ID查询失败", Toast.LENGTH_SHORT).show());
           }
 
           @Override
@@ -195,22 +207,11 @@ public class MainActivity extends AppCompatActivity {
               throws IOException {
             String responseStr = response.body().string();
             Location location = JsonParser.parseLocation(responseStr);
-            if (location != null
-                && BaseConfigUtil.API_STATUS_OK.equals(location.status)) {
-              mWeatherId = location.basic.get(0).cid;
-              WeatherFragment weatherFragment = new WeatherFragment();
-              Bundle bundle = new Bundle();
-              bundle.putString("weather_id", mWeatherId);
-              weatherFragment.setArguments(bundle);
-              mFragmentManager = getSupportFragmentManager();
-              FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-              fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
-
+            if (location != null && BaseConfigUtil.API_STATUS_OK.equals(location.status)) {
               // 得到父级城市
               BaseConfigUtil.PARENT_CITY = location.basic.get(0).parent_city;
-
               // 定位成功，将定位的城市信息加入城市管理列表
-              String cid = location.basic.get(0).cid;
+              String cid = location.basic.get(0).cid; // 根据高德地图定位SDK获取的AdCode，使用城市搜索API得到的天气API所需cid
               String districtName = location.basic.get(0).location;
               if (LitePal.where("cid = ?", String.valueOf(cid)).find(ManagedCity.class) == null) {
                 ManagedCity city = new ManagedCity();
@@ -218,6 +219,13 @@ public class MainActivity extends AppCompatActivity {
                 city.setCityName(districtName);
                 city.save();
               }
+              WeatherFragment weatherFragment = new WeatherFragment();
+              Bundle bundle = new Bundle();
+              bundle.putString("weather_id", cid);
+              weatherFragment.setArguments(bundle);
+              mFragmentManager = getSupportFragmentManager();
+              FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+              fragmentTransaction.replace(R.id.coordinator_layout, weatherFragment).commit();
             }
           }
         });
@@ -226,31 +234,31 @@ public class MainActivity extends AppCompatActivity {
   /** 初始化监听器，获取定位的城市 */
   private void initLocationListener() {
     mLocationListener =
-            aMapLocation -> {
-              if (aMapLocation != null) {
-                if (aMapLocation.getErrorCode() == 0) {
-                  String adCode = aMapLocation.getAdCode(); // 获取区域编码
-                  if (!TextUtils.isEmpty(adCode)) {
-                    BaseConfigUtil.AD_CODE = adCode;
-                    loadWeatherByAdCode(adCode);
-                  }
-                } else {
-                  Log.e(
-                      "AmapError",
-                      "location Error, ErrCode:"
-                          + aMapLocation.getErrorCode()
-                          + ", errInfo:"
-                          + aMapLocation.getErrorInfo());
-                  Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
-                  // 定位失败显示北京朝阳区
-                  String adCode = "110105";
-                  BaseConfigUtil.AD_CODE = adCode;
-                  loadWeatherByAdCode(adCode);
-                }
-                mLocationClient.stopLocation(); // 停止定位
-                mLocationClient.onDestroy(); // 销毁定位客户端
+        aMapLocation -> {
+          if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+              String adCode = aMapLocation.getAdCode(); // 获取区域编码
+              if (!TextUtils.isEmpty(adCode)) {
+                BaseConfigUtil.AD_CODE = adCode;
+                loadWeatherByAdCode(adCode);
               }
-            };
+            } else {
+              Log.e(
+                  "AmapError",
+                  "location Error, ErrCode:"
+                      + aMapLocation.getErrorCode()
+                      + ", errInfo:"
+                      + aMapLocation.getErrorInfo());
+              Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_SHORT).show();
+              // 定位失败显示北京朝阳区
+              String adCode = "110105";
+              BaseConfigUtil.AD_CODE = adCode;
+              loadWeatherByAdCode(adCode);
+            }
+            mLocationClient.stopLocation(); // 停止定位
+            mLocationClient.onDestroy(); // 销毁定位客户端
+          }
+        };
   }
 
   /** 初始化定位 */
@@ -291,6 +299,42 @@ public class MainActivity extends AppCompatActivity {
         break;
       default:
         break;
+    }
+  }
+
+  public void registerMessageReceiver() {
+    mMessageReceiver = new MessageReceiver();
+    IntentFilter filter = new IntentFilter();
+    filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+    filter.addAction(MESSAGE_RECEIVED_ACTION);
+    LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, filter);
+  }
+
+  public class MessageReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      try {
+        if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+          String messge = intent.getStringExtra(KEY_MESSAGE);
+          String extras = intent.getStringExtra(KEY_EXTRAS);
+          StringBuilder showMsg = new StringBuilder();
+          showMsg.append(KEY_MESSAGE + " : " + messge + "\n");
+          if (!ExampleUtil.isEmpty(extras)) {
+            showMsg.append(KEY_EXTRAS + " : " + extras + "\n");
+          }
+          setCostomMsg(showMsg.toString());
+        }
+      } catch (Exception e) {
+      }
+    }
+  }
+
+  // 设置自定义消息
+  private void setCostomMsg(String msg) {
+    if (null != msgText) {
+      msgText.setText(msg);
+      msgText.setVisibility(View.VISIBLE);
     }
   }
 }

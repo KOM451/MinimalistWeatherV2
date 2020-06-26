@@ -4,51 +4,42 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#ddd">
-
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <ScrollView
                 android:id="@+id/weather_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
                 android:overScrollMode="never">
-
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fitsSystemWindows="true">
-
                     <!--实况天气-->
                     <include layout="@layout/now_weather"/>
                     <!--天气预报-->
                     <include layout="@layout/forecast_weather"/>
+                    <!--空气质量-->
+                    <include layout="@layout/weather_quality"/>
                     <!--风力风向、空气湿度、体感温度、气体压强-->
                     <include layout="@layout/wind_hum_fl_pres_weather"/>
                     <!--生活指数-->
                     <include layout="@layout/lifestyle_weather"/>
-
                 </LinearLayout>
-
             </ScrollView>
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         <FrameLayout
             android:id="@+id/choose_area_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end"/>
-
     </androidx.drawerlayout.widget.DrawerLayout>
-
 </FrameLayout>

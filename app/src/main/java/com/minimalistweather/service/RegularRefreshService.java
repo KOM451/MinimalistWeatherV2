@@ -13,6 +13,7 @@ import androidx.preference.PreferenceManager;
 
 import com.minimalistweather.entity.gson_entity.HeWeatherNow;
 import com.minimalistweather.util.JsonParser;
+import com.minimalistweather.view.activity.MainActivity;
 import com.minimalistweather.view.fragment.WeatherFragment;
 
 /**
@@ -34,7 +35,7 @@ public class RegularRefreshService extends Service {
         Log.i(TAG, "定时刷新服务启动");
         updateWeather();
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int refreshInterval = 1000 * 10; // 自动刷新时间间隔
+        int refreshInterval = 1000 * 5; // 自动刷新时间间隔
         long refreshTime = SystemClock.elapsedRealtime() + refreshInterval;
         Intent intentService = new Intent(this, RegularRefreshService.class);
         mPendingIntent = PendingIntent.getService(this, 0, intentService, 0);

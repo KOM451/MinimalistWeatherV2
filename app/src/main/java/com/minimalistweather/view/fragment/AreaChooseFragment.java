@@ -1,7 +1,9 @@
 package com.minimalistweather.view.fragment;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.minimalistweather.entity.database_entity.City;
 import com.minimalistweather.entity.database_entity.District;
 import com.minimalistweather.entity.database_entity.ManagedCity;
 import com.minimalistweather.entity.database_entity.Province;
+import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
 import com.minimalistweather.view.activity.AreaChooseActivity;
@@ -184,7 +187,8 @@ public class AreaChooseFragment extends Fragment {
      */
     private void updateDistrict() {
         mToolbar.setTitle(mSelectedCity.getCityName());
-        mDistricts = LitePal.where("cityid = ?", String.valueOf(mSelectedCity.getId())).find(District.class);
+        mDistricts = LitePal.where("cityid = ?",
+                String.valueOf(mSelectedCity.getId())).find(District.class);
         if(mDistricts.size() > 0) {
             mAreaData.clear();
             for(District district : mDistricts) {
@@ -224,9 +228,7 @@ public class AreaChooseFragment extends Fragment {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String responseStr = response.body().string(); // 响应字符串
                 boolean isParseSuccess = false; // 解析是否成功
-                /*
-                 * 根据type解析相应的数据
-                 */
+                /** 根据type解析相应的数据*/
                 if(TYPE_PROVINCE.equals(type)) {
                     isParseSuccess = JsonParser.parseProvinceResponse(responseStr);
                 } else if(TYPE_CITY.equals(type)) {
@@ -309,21 +311,18 @@ public class AreaChooseFragment extends Fragment {
             } else if(mCurrentLevel == LEVEL_CITY) { // 当前选中等级为市，查询更新区县列表
                 mSelectedCity = mCities.get(position);
                 updateDistrict();
-            } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当选中项为区，跳转到天气显示
+            } else if(mCurrentLevel == LEVEL_DISTRICT) { // 当选中项为区
                 String weatherId = mDistricts.get(position).getWeatherId();
-                if(getActivity() instanceof AreaChooseActivity) { // 宿主为AreaChooseActivity，启动MainActivity
 
+                if(getActivity() instanceof AreaChooseActivity) {
+                    // 宿主为AreaChooseActivity，将选中城市加入城市管理列表
                     ManagedCity city = new ManagedCity();
                     city.setCid(weatherId);
                     city.setCityName(mDistricts.get(position).getDistrictName());
                     city.save();
 
-                    /*Intent intent = new Intent(getActivity(), MainActivity.class);
-                    intent.putExtra("weather_id", weatherId);
-                    getActivity().startActivity(intent);*/
-
                     getActivity().finish();
-                } else if(getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，关闭抽屉视图，请求并显示天气信息
+                } else if(getActivity() instanceof WeatherActivity) { // 宿主为WeatherActivity，切换城市，请求并显示天气信息
                     WeatherFragment fragment = (WeatherFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                     fragment.drawerLayout.closeDrawers();
                     fragment.refresh.setRefreshing(false);
@@ -332,8 +331,9 @@ public class AreaChooseFragment extends Fragment {
                     fragment.requestWeatherAirQuality(weatherId);
                     fragment.requestWeatherForecast(weatherId);
                     fragment.requestWeatherLifestyle(weatherId);
-                } else if(getActivity() instanceof MainActivity) { // 宿主市MainActivity，关闭抽屉视图，请求并显示天气信息
-                    WeatherFragment fragment = (WeatherFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
+                } else if(getActivity() instanceof MainActivity) { // 宿主为MainActivity，切换城市，请求并显示天气信息
+                    WeatherFragment fragment = (WeatherFragment) getActivity()
+                            .getSupportFragmentManager().findFragmentById(R.id.coordinator_layout);
                     fragment.drawerLayout.closeDrawers();
                     fragment.refresh.setRefreshing(false);
                     fragment.currentWeatherId = weatherId;
@@ -342,7 +342,6 @@ public class AreaChooseFragment extends Fragment {
                     fragment.requestWeatherForecast(weatherId);
                     fragment.requestWeatherLifestyle(weatherId);
                 }
-
             }
         }
     }

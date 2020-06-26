@@ -16,6 +16,7 @@ import com.minimalistweather.util.JsonParser;
 import com.minimalistweather.view.fragment.WeatherFragment;
 
 import org.jetbrains.annotations.NotNull;
+import org.litepal.LitePal;
 
 import java.io.IOException;
 
@@ -50,11 +51,14 @@ public class AMapLocationService extends Service {
                         Location location = JsonParser.parseLocation(responseStr);
                         if (location != null && BaseConfigUtil.API_STATUS_OK.equals(location.status)) {
                             String cid = location.basic.get(0).cid;
-                            String districtName = location.basic.get(0).location;
-                            ManagedCity city = new ManagedCity();
-                            city.setCid(cid);
-                            city.setCityName(districtName);
-                            city.save();
+                            if (LitePal.where("cid = ?", String.valueOf(cid)).find(ManagedCity.class) == null) {
+                                String districtName = location.basic.get(0).location;
+                                ManagedCity city = new ManagedCity();
+                                city.setCid(cid);
+                                city.setCityName(districtName);
+                                city.save();
+                            }
+
                             BaseConfigUtil.CID = cid;
 
                             final Intent intent = new Intent();
@@ -83,7 +87,7 @@ public class AMapLocationService extends Service {
         // 设置定位模式为高精度模式。
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         // 设置定位间隔
-        mLocationOption.setInterval(20000);
+        mLocationOption.setInterval(10000);
         // 设置超时时间
         mLocationOption.setHttpTimeOut(30000);
         mLocationClient.setLocationListener(mLocationListener);

@@ -6,8 +6,9 @@ public class BaseConfigUtil {
     public static final String API_STATUS_OK = "ok";
 
     // 和风天气 WebAPI 用户 key
-    public static final String API_KEY = "b630c64a4e7b496bbcc522d99e62c756";
-
+    public static final String API_KEY = "1f973beb7602432bb31cdceb9da27525";
+//    3086e91d66c04ce588a7f538f917c7f4
+//    b630c64a4e7b496bbcc522d99e62c756
     // 区域编码，默认为北京市朝阳区
     public static String AD_CODE = "110105";
 
@@ -18,6 +19,7 @@ public class BaseConfigUtil {
     public static String PARENT_CITY = "北京";
 
     // 缓存数据 key
+    public static final String PREFERENCE_WEATHER_ID = "weather_id";
     public static final String PREFERENCE_WEATHER_NOW = "weather_now";
     public static final String PREFERENCE_WEATHER_FORECAST = "weather_forecast";
     public static final String PREFERENCE_WEATHER_AQI = "weather_air_quality";

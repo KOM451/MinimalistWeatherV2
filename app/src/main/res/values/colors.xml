@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--<color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>-->
     <color name="colorPrimary">#106c99</color>
     <color name="colorPrimaryDark">#0D4A6A</color>
     <color name="colorAccent">#FC413D</color>
@@ -140,4 +143,9 @@
     <color name="moon_light_circle">#33446FF2</color>
     <color name="sun_dark_circle">#33AD9442</color>
     <color name="moon_dark_circle">#334A5CC4</color>
+    <color name="arc_bg_color">#C6D7F4</color>
+    <color name="arc_progress_color">#FBFEF7</color>
+    <color name="blue_one">#9FC8E9</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_bg">#22000000</color>
 </resources>

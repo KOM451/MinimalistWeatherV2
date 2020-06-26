@@ -39,6 +39,8 @@ import com.minimalistweather.entity.gson_entity.Lifestyle;
 import com.minimalistweather.util.BaseConfigUtil;
 import com.minimalistweather.util.HttpUtil;
 import com.minimalistweather.util.JsonParser;
+import com.minimalistweather.view.RoundProgressBar;
+import com.minimalistweather.view.WhiteWindmills;
 import com.minimalistweather.view.activity.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +57,6 @@ public class WeatherFragment extends Fragment {
 
     private static final String TAG = "WeatherFragment";
 
-
     public static final String ACTION_UPDATE = "action.update";
 
     public LocationChangeReceiver mLocationChangeReceiver;
@@ -63,6 +64,7 @@ public class WeatherFragment extends Fragment {
     public static final String ACTION_REFRESH = "action.refresh";
 
     public AutoRefreshReceiver mAutoRefreshReceiver;
+
 
     public DrawerLayout drawerLayout; // 用于实现滑动菜单逻辑
 
@@ -87,6 +89,17 @@ public class WeatherFragment extends Fragment {
     private TextView mWindSc; // 风力
 
     private TextView mWindDir; // 风向
+
+    private WhiteWindmills wwBig;//大风车
+
+    private WhiteWindmills wwSmall;//小风车
+    private RoundProgressBar rpbAqi;
+    private TextView tvPm10;
+    private TextView tvPm25;
+    private TextView tvNo2;
+    private TextView tvSo2;
+    private TextView tvO3;
+    private TextView tvCo;
 
     private TextView mHum; // 空气湿度
 
@@ -137,7 +150,22 @@ public class WeatherFragment extends Fragment {
         refresh.setColorSchemeResources(R.color.colorPrimary);
         drawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
         currentWeatherId = getArguments().getString("weather_id", null);
+        if (currentWeatherId != null) {
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
+            editor.putString("weather_id", currentWeatherId);
+            editor.apply();
+        }
 
+        wwBig = view.findViewById(R.id.ww_big);
+        wwSmall = view.findViewById(R.id.ww_small);
+        rpbAqi=view.findViewById(R.id.rpb_aqi);
+
+        tvPm10=view.findViewById(R.id.tv_pm10);
+        tvPm25=view.findViewById(R.id.tv_pm25);
+        tvSo2=view.findViewById(R.id.tv_so2);
+        tvCo=view.findViewById(R.id.tv_co);
+        tvO3=view.findViewById(R.id.tv_o3);
+        tvNo2=view.findViewById(R.id.tv_no2);
         return view;
     }
 
@@ -149,13 +177,13 @@ public class WeatherFragment extends Fragment {
         IntentFilter filterLocation = new IntentFilter();
         filterLocation.addAction(ACTION_UPDATE);
         mLocationChangeReceiver = new LocationChangeReceiver();
-        getActivity().registerReceiver(mLocationChangeReceiver, filterLocation);
+        getContext().registerReceiver(mLocationChangeReceiver, filterLocation);
 
         // 动态注册广播接收器，用于接收定时刷新服务推送的数据
         IntentFilter filterRefresh = new IntentFilter();
         filterRefresh.addAction(ACTION_REFRESH);
         mAutoRefreshReceiver = new AutoRefreshReceiver();
-        getActivity().registerReceiver(mAutoRefreshReceiver, filterRefresh);
+        getContext().registerReceiver(mAutoRefreshReceiver, filterRefresh);
 
         if(currentWeatherId != null) {
             requestWeatherNow(currentWeatherId);
@@ -170,11 +198,12 @@ public class WeatherFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(currentWeatherId != null) {
-                    requestWeatherNow(currentWeatherId); // 请求实况天气数据
-                    requestWeatherAirQuality(currentWeatherId); // 请求空气质量数据
-                    requestWeatherForecast(currentWeatherId); // 请求天气预报数据
-                    requestWeatherLifestyle(currentWeatherId); // 请求生活指数数据
+                String weatherId = PreferenceManager.getDefaultSharedPreferences(WeatherFragment.this.getActivity()).getString(BaseConfigUtil.PREFERENCE_WEATHER_ID, null);
+                if(weatherId != null) {
+                    requestWeatherNow(weatherId); // 请求实况天气数据
+                    requestWeatherAirQuality(weatherId); // 请求空气质量数据
+                    requestWeatherForecast(weatherId); // 请求天气预报数据
+                    requestWeatherLifestyle(weatherId); // 请求生活指数数据
                     // 在最后执行的请求结束时，隐藏刷新进度
                 }
 
@@ -278,7 +307,7 @@ public class WeatherFragment extends Fragment {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseStr = response.body().string();
                 final HeWeatherAirQuality weatherAirQuality = JsonParser.parseWeatherAirQuality(responseStr);
-                getActivity().runOnUiThread(new Runnable() {
+                requireActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if(weatherAirQuality != null && BaseConfigUtil.API_STATUS_OK.equals(weatherAirQuality.status)) {
@@ -363,6 +392,7 @@ public class WeatherFragment extends Fragment {
                             // 接口状态正常，更新数据
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherFragment.this.getActivity()).edit();
                             editor.putString("weather_now", responseStr);
+                            editor.putString("weather_id", weatherId);
                             editor.apply(); // 更新缓存
                             showWeatherNowInformation(weatherNow); // 更新实况天气信息
                         } else {
@@ -429,6 +459,28 @@ public class WeatherFragment extends Fragment {
         mNowAirQlty.setText(weatherAirQuality.airNowCity.qlty);
         mNowAirAqi.setText(weatherAirQuality.airNowCity.aqi);
         mNowAirPm25.setText(weatherAirQuality.airNowCity.pm25);
+
+        rpbAqi.setMaxProgress(500);//最大进度，用于计算
+        rpbAqi.setMinText("0");//设置显示最小值
+        rpbAqi.setMinTextSize(32f);
+        rpbAqi.setMaxText("500");//设置显示最大值
+        rpbAqi.setMaxTextSize(32f);
+        rpbAqi.setProgress(Float.valueOf(weatherAirQuality.airNowCity.aqi));//当前进度
+        rpbAqi.setArcBgColor(getResources().getColor(R.color.arc_bg_color));//圆弧的颜色
+        rpbAqi.setProgressColor(getResources().getColor(R.color.arc_progress_color));//进度圆弧的颜色
+        rpbAqi.setFirstText(weatherAirQuality.airNowCity.qlty);//空气质量描述  取值范围：优，良，轻度污染，中度污染，重度污染，严重污染
+        rpbAqi.setFirstTextSize(44f);
+        rpbAqi.setSecondText(weatherAirQuality.airNowCity.aqi);//空气质量值
+        rpbAqi.setSecondTextSize(64f);
+        rpbAqi.setMinText("0");
+        rpbAqi.setMinTextColor(getResources().getColor(R.color.arc_progress_color));
+
+        tvPm10.setText(weatherAirQuality.airNowCity.pm10);//PM10
+        tvPm25.setText(weatherAirQuality.airNowCity.pm25);//PM2.5
+        tvNo2.setText(weatherAirQuality.airNowCity.no2);//二氧化氮
+        tvSo2.setText(weatherAirQuality.airNowCity.so2);//二氧化硫
+        tvO3.setText(weatherAirQuality.airNowCity.o3);//臭氧
+        tvCo.setText(weatherAirQuality.airNowCity.co);//一氧化碳
     }
 
     /**
@@ -472,24 +524,21 @@ public class WeatherFragment extends Fragment {
         String districtName = weatherNow.basic.location; // 获取地区名称
         String nowTmpDegree = weatherNow.now.tmp + "℃"; // 获取实况温度
         String nowCond = weatherNow.now.cond_txt; // 获取实况天气状况
-
         String windSc = weatherNow.now.wind_sc + "级"; // 获取风力
         String windDir = weatherNow.now.wind_dir; // 获取风向
         String hum = weatherNow.now.hum + "%"; // 获取空气湿度
         String fl = weatherNow.now.fl + "℃"; // 获取体感温度
         String pref = weatherNow.now.pres + "hPa"; // 获取大气压强
-
         mNowTmpDegree.setText(nowTmpDegree);
         mNowCond.setText(nowCond);
-
         mWindSc.setText(windSc);
         mWindDir.setText(windDir);
         mHum.setText(hum);
         mFl.setText(fl);
         mPres.setText(pref);
-
         mToolbar.setTitle(districtName);
-
+        wwBig.startRotate();//大风车开始转动
+        wwSmall.startRotate();//小风车开始转动
         /*
          * 动态获取实况天气图标
          */
@@ -497,41 +546,49 @@ public class WeatherFragment extends Fragment {
         String iconName = "icon_" + weatherNow.now.cond_code + "d"; // 白天图标
         int iconCode = getResources().getIdentifier(iconName, "drawable", "com.minimalistweather");
         mCondIcon.setImageResource(iconCode);
-
         mWeatherLayout.setVisibility(View.VISIBLE);
     }
 
-    // 接收定位服务传输的数据
+
+    /**
+     * 页面销毁时
+     */
+    @Override
+    public void onDestroy() {
+        wwBig.stop();//停止大风车
+        wwSmall.stop();//停止小风车
+        super.onDestroy();
+    }
+
+    // 接收定位服务传输的数据，并更新数据
     private class LocationChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "当前的weatherId = " + intent.getStringExtra("weather_id"));
             String weatherId = intent.getStringExtra("weather_id");
-            if(weatherId != null) {
+            if(weatherId != null) { // 如果接收到的数据有效，则重新请求天气数据
                 requestWeatherNow(weatherId);
                 requestWeatherAirQuality(weatherId);
                 requestWeatherForecast(weatherId);
                 requestWeatherLifestyle(weatherId);
-                currentWeatherId = weatherId;
             }
         }
     }
 
-    // 接收定时刷新服务传输额数据
+    // 接收定时刷新服务传输的数据，并更新数据
     private class AutoRefreshReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "当前刷新的weatherId = " + intent.getStringExtra("weather_id"));
             String weatherId = intent.getStringExtra("weather_id");
             if(weatherId != null) {
                 requestWeatherNow(weatherId);
                 requestWeatherAirQuality(weatherId);
                 requestWeatherForecast(weatherId);
                 requestWeatherLifestyle(weatherId);
-                currentWeatherId = weatherId;
+        Toast.makeText(context, "自动刷新成功", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 }

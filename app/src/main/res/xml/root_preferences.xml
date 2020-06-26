@@ -6,10 +6,6 @@
             app:title="@string/switch_location"/>
 
         <SwitchPreference
-            app:key="switch_notification"
-            app:title="@string/switch_notification"/>
-
-        <SwitchPreference
             app:key="switch_regular_refresh"
             app:title="@string/switch_regular_refresh"/>
 

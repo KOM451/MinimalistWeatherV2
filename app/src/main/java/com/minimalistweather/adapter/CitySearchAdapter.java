@@ -74,16 +74,20 @@ public class CitySearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int index = name.indexOf("-");
         String parentCity = name.substring(0, index);
         String location = name.substring(index + 1);
-        String cityName = location + ", " + parentCity + ", " + mData.get(position).getAdminArea() + ", " + mData.get(position).getCnty();
+        // 对搜索结果做格式化处理
+        String cityName = location + ", " + parentCity + ", " + mData.get(position).getAdminArea()
+                + ", " + mData.get(position).getCnty();
         if(TextUtils.isEmpty(mData.get(position).getAdminArea())) {
             cityName = location + ", " + parentCity + ", " + mData.get(position).getCnty();
         }
         if(!TextUtils.isEmpty(cityName)) {
             citySearchViewHolder.mHistoryCity.setText(cityName);
-            if(cityName.contains(mSearchText)) {
-                int i = cityName.indexOf(mSearchText);
+            if(cityName.contains(mSearchText)) { // 对命中的文本做处理
+                int i = cityName.indexOf(mSearchText); // 获取与搜索内容匹配的文本的起始位置
                 SpannableString spannableString = new SpannableString(cityName);
-                spannableString.setSpan(new ForegroundColorSpan(mCitySearchActivity.getResources().getColor(R.color.light_text_color)), i, i + mSearchText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // 将搜索结果中与搜索内容相匹配的字符串高亮显示
+                spannableString.setSpan(new ForegroundColorSpan(mCitySearchActivity.getResources()
+                        .getColor(R.color.light_text_color)), i, i + mSearchText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 citySearchViewHolder.mHistoryCity.setText(spannableString);
             }
         }

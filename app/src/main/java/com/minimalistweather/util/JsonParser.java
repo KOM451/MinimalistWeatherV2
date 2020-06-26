@@ -63,17 +63,17 @@ public class JsonParser {
     }
 
     /**
-     * 解析和处理服务器返回的县级数据
+     * 解析和处理服务器返回的区级数据
      */
     public static boolean parseDistrictResponse(String response, int cityId) {
         if (!TextUtils.isEmpty(response)) {
             try {
-                JSONArray allCounties = new JSONArray(response);
-                for (int i = 0; i < allCounties.length(); i++) {
-                    JSONObject countyObject = allCounties.getJSONObject(i);
+                JSONArray allDistricts = new JSONArray(response);
+                for (int i = 0; i < allDistricts.length(); i++) {
+                    JSONObject districtObject = allDistricts.getJSONObject(i);
                     District district = new District();
-                    district.setDistrictName(countyObject.getString("name"));
-                    district.setWeatherId(countyObject.getString("weather_id"));
+                    district.setDistrictName(districtObject.getString("name"));
+                    district.setWeatherId(districtObject.getString("weather_id"));
                     district.setCityId(cityId);
                     district.save();
                 }
